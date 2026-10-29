@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Shop Của Bạn — Admin</title>
+<style>
+:root{--bg:#05060a;--panel:#0d0f17;--panel2:#121522;--line:#1f2434;--line2:#2a3046;--text:#e9ebf3;--muted:#8a92a8;--gold:#f5c96b;--gold2:#f59e0b;--emerald:#34d399;--violet:#a78bfa;--cyan:#22d3ee;--rose:#fb7185;--amber:#fbbf24;--blue:#60a5fa}
+*{box-sizing:border-box}
+html{color-scheme:dark;scrollbar-color:#2a3046 #05060a}
+body{margin:0;min-height:100vh;font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);position:relative;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:-20%;z-index:0;pointer-events:none;background:radial-gradient(45% 40% at 15% 10%,rgba(124,58,237,.30),transparent 70%),radial-gradient(40% 35% at 85% 15%,rgba(34,211,238,.20),transparent 70%),radial-gradient(45% 40% at 75% 90%,rgba(245,201,107,.16),transparent 70%),radial-gradient(40% 35% at 10% 85%,rgba(251,113,133,.14),transparent 70%);filter:blur(30px);animation:auroraDrift 26s ease-in-out infinite alternate}
+body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(1px 1px at 12% 22%,#fff9 50%,transparent 51%),radial-gradient(1px 1px at 34% 68%,#fff7 50%,transparent 51%),radial-gradient(1.5px 1.5px at 58% 14%,#fffb 50%,transparent 51%),radial-gradient(1px 1px at 76% 46%,#fff8 50%,transparent 51%),radial-gradient(1px 1px at 90% 82%,#fff7 50%,transparent 51%),radial-gradient(1.5px 1.5px at 6% 88%,#fff9 50%,transparent 51%),radial-gradient(1px 1px at 46% 92%,#fff6 50%,transparent 51%),radial-gradient(1px 1px at 68% 74%,#fff7 50%,transparent 51%);opacity:.7}
+@keyframes auroraDrift{from{transform:translate3d(-2%,-1%,0) scale(1)}to{transform:translate3d(2%,2%,0) scale(1.06)}}
+#root{position:relative;z-index:1}
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 28px;background:rgba(7,8,13,.72);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);border-bottom:1px solid var(--line);box-shadow:0 1px 0 rgba(245,201,107,.18),0 10px 40px rgba(0,0,0,.5)}
+.top h1{margin:0;font-size:21px;font-weight:900;letter-spacing:.3px;background:linear-gradient(90deg,var(--gold),#fff 45%,var(--violet) 75%,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.top-right{display:flex;align-items:center;gap:12px}
+.user-chip{display:flex;align-items:center;gap:9px;padding:7px 14px 7px 8px;border-radius:999px;background:var(--panel2);border:1px solid var(--line2);font-weight:700;font-size:14px}
+.user-chip i{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1204;font-style:normal;font-weight:900;font-size:13px}
+.top button{border:1px solid var(--line2);background:transparent;color:var(--text);border-radius:11px;padding:10px 16px;font-weight:800;cursor:pointer;transition:.18s}
+.top button:hover{border-color:var(--rose);color:var(--rose);box-shadow:0 0 22px rgba(251,113,133,.25)}
+.wrap{max-width:1450px;margin:auto;padding:28px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin:4px 0 26px}
+.stat{position:relative;overflow:hidden;padding:22px 22px 20px;border-radius:20px;color:var(--muted);font-weight:700;font-size:14px;background:linear-gradient(165deg,rgba(var(--c),.17),rgba(13,15,23,.92) 62%);border:1px solid rgba(var(--c),.34);box-shadow:0 14px 40px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.05)}
+.stat::after{content:"";position:absolute;right:-40px;top:-40px;width:130px;height:130px;border-radius:50%;background:rgba(var(--c),.22);filter:blur(30px)}
+.stat b{position:relative;z-index:1;display:block;margin-top:10px;font-size:30px;font-weight:900;color:rgb(var(--c));text-shadow:0 0 28px rgba(var(--c),.45);letter-spacing:.3px}
+.s-gold{--c:245,201,107}.s-green{--c:52,211,153}.s-violet{--c:167,139,250}.s-cyan{--c:34,211,238}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 20px;padding:8px;border-radius:18px;background:rgba(13,15,23,.75);border:1px solid var(--line);backdrop-filter:blur(10px);width:fit-content;max-width:100%}
+.tabs button{border:0;background:transparent;color:var(--muted);padding:12px 18px;border-radius:12px;font-weight:800;font-size:14px;cursor:pointer;transition:.18s}
+.tabs button:hover{color:var(--text);background:var(--panel2)}
+.tabs button.active{color:#1a1204;background:linear-gradient(135deg,var(--gold),var(--gold2));box-shadow:0 8px 26px rgba(245,158,11,.38)}
+.panel{display:none;padding:26px;border-radius:22px;background:linear-gradient(180deg,rgba(18,21,34,.92),rgba(10,12,19,.94));border:1px solid var(--line);box-shadow:0 20px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.04)}
+.panel.active{display:block;animation:panelIn .28s ease}
+@keyframes panelIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.panel h2{margin:0 0 18px;font-size:20px;font-weight:900;color:var(--gold);letter-spacing:.2px}
+.table-wrap{overflow:auto;border-radius:16px;border:1px solid var(--line);background:rgba(6,7,12,.55)}
+.table{width:100%;border-collapse:collapse;min-width:850px}
+.table th,.table td{padding:14px 15px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:14px}
+.table th{position:sticky;top:0;background:#0f1220;color:var(--muted);font-weight:800;font-size:13px;letter-spacing:.2px;white-space:nowrap}
+.table tr:last-child td{border-bottom:0}
+.table tbody tr,.table tr:not(:first-child){transition:background .15s}
+.table tr:not(:first-child):hover td{background:rgba(167,139,250,.07)}
+.table td b{color:#fff}
+.money{color:var(--gold)!important;font-weight:900;text-shadow:0 0 18px rgba(245,201,107,.3)}
+.pos{color:var(--emerald)!important;text-shadow:0 0 16px rgba(52,211,153,.35)}
+.neg{color:var(--rose)!important;text-shadow:0 0 16px rgba(251,113,133,.35)}
+.ok-text{color:var(--emerald);font-weight:800}
+.btn{--c:167,139,250;border:1px solid rgba(var(--c),.4);border-radius:10px;padding:8px 12px;font-weight:800;font-size:13px;cursor:pointer;margin:3px;color:rgb(var(--c));background:rgba(var(--c),.12);transition:.16s}
+.btn:hover{background:rgba(var(--c),.24);transform:translateY(-1px);box-shadow:0 8px 22px rgba(var(--c),.28)}
+.btn:active{transform:none}
+.green{--c:52,211,153}.red{--c:251,113,133}.blue{--c:96,165,250}.yellow{--c:251,191,36}
+.badge{display:inline-block;padding:5px 11px;border-radius:999px;font-weight:800;font-size:12px;white-space:nowrap;color:rgb(var(--c,138,146,168));background:rgba(var(--c,138,146,168),.14);border:1px solid rgba(var(--c,138,146,168),.38)}
+.b-pending{--c:251,191,36}.b-working{--c:34,211,238}.b-completed,.b-approved{--c:52,211,153}.b-cancelled,.b-rejected{--c:251,113,133}.b-admin{--c:245,201,107}.b-customer{--c:96,165,250}
+.notice{margin:0 0 18px;padding:14px 16px;border-radius:14px;background:linear-gradient(135deg,rgba(251,191,36,.13),rgba(251,113,133,.07));border:1px solid rgba(251,191,36,.34);color:#f6d98a;font-size:14px;line-height:1.55}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+.order-info{line-height:1.8;min-width:270px}
+.secret{display:inline-block;font-family:Consolas,"SFMono-Regular",Menlo,monospace;font-size:13px;color:var(--cyan);background:rgba(34,211,238,.09);border:1px solid rgba(34,211,238,.24);border-radius:8px;padding:2px 8px;word-break:break-all}
+.login{position:relative;max-width:440px;margin:110px auto;padding:34px 30px;border-radius:26px;background:linear-gradient(170deg,rgba(21,24,38,.94),rgba(9,10,16,.96));border:1px solid rgba(245,201,107,.34);box-shadow:0 30px 90px rgba(0,0,0,.65),0 0 60px rgba(124,58,237,.18),inset 0 1px 0 rgba(255,255,255,.06);overflow:hidden}
+.login::before{content:"";position:absolute;inset:-40%;z-index:0;background:conic-gradient(from 0deg,rgba(34,197,94,.14),rgba(6,182,212,.14),rgba(139,92,246,.18),rgba(236,72,153,.13),rgba(34,197,94,.14));filter:blur(50px);animation:spin 22s linear infinite}
+.login>*{position:relative;z-index:1}
+.login h2{margin:0 0 8px;font-size:24px;font-weight:900;background:linear-gradient(90deg,var(--gold),#fff 55%,var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+.login p{color:var(--muted);line-height:1.6;margin:0 0 14px}
+.login input{width:100%;padding:14px 16px;margin:8px 0;border-radius:13px;border:1px solid var(--line2);background:rgba(5,6,10,.75);color:var(--text);font-size:15px;outline:none;transition:.16s}
+.login input::placeholder{color:#5d657b}
+.login input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,201,107,.16)}
+.login button{width:100%;padding:14px;margin-top:12px;border:0;border-radius:13px;font-weight:900;font-size:15px;letter-spacing:.3px;cursor:pointer;color:#1a1204;background:linear-gradient(135deg,var(--gold),var(--gold2));box-shadow:0 12px 32px rgba(245,158,11,.35);transition:.16s}
+.login button:hover{transform:translateY(-1px);box-shadow:0 16px 40px rgba(245,158,11,.5)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.confirm-overlay{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(2,3,7,.78);backdrop-filter:blur(10px)}
+.confirm-overlay.show{display:flex}
+.confirm-box{width:min(480px,100%);padding:28px;border-radius:24px;background:linear-gradient(170deg,#151827,#0a0b12);border:1px solid rgba(251,113,133,.4);box-shadow:0 30px 90px #000c,0 0 50px rgba(251,113,133,.14);animation:panelIn .25s ease}
+.confirm-box h2{margin:0 0 12px;font-size:21px;color:var(--rose)}
+.confirm-box p{color:#c9cedd;line-height:1.6}
+.confirm-box .notice{margin:14px 0 0}
+.confirm-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:22px}
+.confirm-actions button{border:0;border-radius:12px;padding:12px 18px;font-weight:900;cursor:pointer;transition:.16s}
+.cancel-confirm{background:var(--panel2);color:var(--text);border:1px solid var(--line2)!important}
+.cancel-confirm:hover{border-color:var(--muted)!important}
+.danger-confirm{color:#fff;background:linear-gradient(135deg,#e11d48,#be123c);box-shadow:0 10px 28px rgba(225,29,72,.4)}
+.danger-confirm:hover{transform:translateY(-1px)}
+.confirm-actions button:disabled{opacity:.55;cursor:wait;transform:none}
+.chat-layout{display:grid;grid-template-columns:290px 1fr;gap:16px}
+.chat-list,.chat-window{border-radius:18px;overflow:hidden;background:rgba(6,7,12,.6);border:1px solid var(--line)}
+.chat-list-head,.chat-head{padding:15px 18px;font-weight:900;color:var(--gold);background:#0f1220;border-bottom:1px solid var(--line)}
+.chat-users{max-height:560px;overflow:auto}
+.chat-user{padding:14px 16px;border-bottom:1px solid var(--line);cursor:pointer;transition:.15s}
+.chat-user:hover{background:rgba(167,139,250,.08)}
+.chat-user.active{background:linear-gradient(90deg,rgba(167,139,250,.2),transparent);box-shadow:inset 3px 0 0 var(--violet)}
+.chat-user b{display:block;color:#fff}
+.chat-user small{display:block;margin-top:3px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-messages{height:460px;overflow:auto;padding:18px;background:radial-gradient(60% 50% at 80% 0,rgba(124,58,237,.1),transparent 70%),#07080d}
+.chat-msg{max-width:75%;margin:9px 0;padding:11px 14px;border-radius:16px;word-break:break-word;line-height:1.5;font-size:14px}
+.chat-msg.customer{margin-right:auto;background:#161a29;border:1px solid var(--line2);border-bottom-left-radius:5px}
+.chat-msg.admin{margin-left:auto;color:#fff;background:linear-gradient(135deg,#7c3aed,#4f46e5);border-bottom-right-radius:5px;box-shadow:0 8px 24px rgba(99,102,241,.32)}
+.chat-msg small{display:block;opacity:.6;margin-top:5px;font-size:11px}
+.chat-compose{display:flex;gap:10px;padding:14px;border-top:1px solid var(--line);background:#0b0d16}
+.chat-compose input{flex:1;padding:13px 15px;border-radius:12px;border:1px solid var(--line2);background:#05060a;color:var(--text);outline:none;font-size:14px}
+.chat-compose input:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(167,139,250,.16)}
+.chat-compose button{border:0;border-radius:12px;padding:0 22px;font-weight:900;cursor:pointer;color:#1a1204;background:linear-gradient(135deg,var(--gold),var(--gold2));transition:.16s}
+.chat-compose button:hover{box-shadow:0 8px 24px rgba(245,158,11,.4)}
+.chat-compose button:disabled,.chat-compose input:disabled{opacity:.6;cursor:wait}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:#07080d}
+::-webkit-scrollbar-thumb{background:#262c42;border-radius:10px;border:2px solid #07080d}
+::-webkit-scrollbar-thumb:hover{background:#3a4263}
+@media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:800px){.chat-layout{grid-template-columns:1fr}.chat-users{max-height:220px}.top{padding:14px 16px}.top h1{font-size:17px}.user-chip span{display:none}.user-chip{padding:7px}}
+@media(max-width:520px){.stats{grid-template-columns:1fr}.wrap{padding:14px}.panel{padding:16px}.confirm-actions{flex-direction:column}.confirm-actions button{width:100%}.tabs{width:100%}.tabs button{flex:1 1 auto}}
+@media(prefers-reduced-motion:reduce){body::before,.login::before,.panel.active{animation:none}}
+.ban-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 6px}
+.ban-grid .btn{margin:0;padding:16px 8px;font-size:14px}
+.del-input{width:100%;padding:13px 15px;margin-top:6px;border-radius:12px;border:1px solid var(--line2);background:#05060a;color:var(--text);font-size:15px;outline:none;transition:.16s}
+.del-input:focus{border-color:var(--rose);box-shadow:0 0 0 3px rgba(251,113,133,.18)}
+.dim-row td{opacity:.5}
+.dim-row td:last-child{opacity:1}
+@media(max-width:520px){.ban-grid{grid-template-columns:1fr}}
+.chat-msg .st{display:block;margin-top:3px;font-size:11px;font-weight:700;text-align:right}.chat-msg .st-sent{color:#c7d2fe}.chat-msg .st-recv{color:#e0e7ff}.chat-msg .st-seen{color:#67e8f9}
+.search-input{width:100%;margin:0 0 14px;padding:13px 16px;border-radius:13px;border:1px solid var(--line2);background:rgba(5,6,10,.75);color:var(--text);font-size:15px;outline:none;transition:.16s}
+.search-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,211,238,.16)}
+.secret.order-code{white-space:nowrap;word-break:normal;font-weight:800;letter-spacing:.5px}
+.svc-card{padding:18px;margin:0 0 20px;border-radius:16px;background:rgba(6,7,12,.55);border:1px solid var(--line)}
+.svc-card h3{margin:0 0 12px;color:var(--gold);font-size:16px}
+.svc-form{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;align-items:end}
+.svc-form label{display:block;margin:0 0 5px;color:var(--muted);font-size:12px;font-weight:800}
+.svc-form .full-row{grid-column:1/-1}
+.svc-hint{margin:10px 0 0;color:var(--muted);font-size:12.5px;line-height:1.6}
+.avatar-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.avatar-item{padding:10px;border-radius:14px;background:rgba(6,7,12,.5);border:1px solid var(--line);text-align:center}
+.avatar-item img{width:100%;height:80px;object-fit:cover;border-radius:10px;margin-bottom:8px;background:#111}
+.avatar-item .name{font-size:12px;color:var(--text);font-weight:800;margin-bottom:8px;min-height:32px;display:flex;align-items:center;justify-content:center;text-align:center}
+.avatar-item input[type=file]{display:none}
+.avatar-item .up-btn{display:block;width:100%;padding:8px;border-radius:9px;border:1px solid var(--line2);background:var(--panel2);color:var(--text);font-size:12px;font-weight:800;cursor:pointer}
+.ip-list{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow:auto;margin:6px 0 0}
+.ip-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;padding:11px 12px;border-radius:11px;border:1px solid var(--line2);background:#05060a;cursor:pointer}
+.ip-row input{width:17px;height:17px;margin:0;accent-color:var(--cyan)}
+.ip-row.is-banned{opacity:.6;cursor:default}
+.ip-addr{font-family:Consolas,Menlo,monospace;color:var(--cyan);font-weight:800}
+.ip-meta{color:var(--muted);font-size:12px}
+.ip-dur{grid-template-columns:repeat(4,1fr)}
+.ip-form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ip-form .search-input{margin:0}
+@media(max-width:520px){.ip-dur,.ip-form{grid-template-columns:1fr 1fr}}
+.order-note.admin-reply{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.35)}
+.order-note.admin-reply span{color:#a5f3fc}
+.order-note{margin-top:8px;padding:9px 11px;border-radius:10px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.32);line-height:1.5;max-width:360px}
+.order-note span{display:block;margin-top:3px;color:#ddd6fe;white-space:pre-wrap;word-break:break-word}
+.b-hardcoded{--c:96,165,250}.b-custom{--c:167,139,250}
+.need-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.need-opt{display:flex;align-items:center;gap:9px;padding:11px 12px;border-radius:11px;border:1px solid var(--line2);background:rgba(5,6,10,.75);cursor:pointer;font-size:13.5px;font-weight:700;color:var(--muted);transition:.15s;user-select:none}
+.need-opt input{width:17px;height:17px;margin:0;accent-color:var(--cyan);flex:none}
+.need-opt:has(input:checked){border-color:rgba(34,211,238,.55);background:rgba(34,211,238,.1);color:var(--text)}
+.need-sum{font-size:11px;color:var(--muted);margin:-4px 0 8px;line-height:1.45}
+.need-sum b{color:var(--cyan)}
+@media(max-width:800px){.need-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div id="userModal" class="confirm-overlay"><div id="userModalBox" class="confirm-box"></div></div>
+<div id="cancelConfirm" class="confirm-overlay"><div class="confirm-box"><h2>⚠️ Xác nhận hủy đơn</h2><p id="cancelConfirmText">Bạn có chắc muốn hủy đơn này?</p><p class="notice">💰 Nếu đơn đã bị trừ tiền, hệ thống sẽ tự động hoàn lại đúng số tiền của đơn cho khách. Chỉ được hoàn một lần.</p><div class="confirm-actions"><button class="cancel-confirm" onclick="closeCancelConfirm()">Không, quay lại</button><button id="confirmCancelBtn" class="danger-confirm" onclick="confirmCancelOrder()">Xác nhận hủy + hoàn tiền</button></div></div></div>
+<script>
+const SUPABASE_URL=window.SUPABASE_URL||localStorage.getItem('shopzicl_supabase_url');
+const SUPABASE_ANON_KEY=window.SUPABASE_ANON_KEY||localStorage.getItem('shopzicl_supabase_anon_key');
+let token=localStorage.getItem('shopzicl_access_token');
+let profile=null,pendingCancelId=null,pendingCancelLabel='',cancelBusy=false;
+const ORDER_COLS='id,user_id,service_name,package_name,price,status,account,password,game_username,game_password,phone_number,login_support_code,extra_data,created_at,updated_at';
+async function fetchOrders(){try{return await api('orders?select='+ORDER_COLS+',order_code,customer_note,admin_note&order=created_at.desc')}catch(e){if(!/admin_note|customer_note|order_code|column|42703/i.test(String(e.message)))throw e}try{return await api('orders?select='+ORDER_COLS+',order_code,customer_note&order=created_at.desc')}catch(e){if(!/customer_note|order_code|column|42703/i.test(String(e.message)))throw e}try{return await api('orders?select='+ORDER_COLS+',order_code&order=created_at.desc')}catch(e){if(/order_code|column|42703/i.test(String(e.message)))return api('orders?select='+ORDER_COLS+'&order=created_at.desc');throw e}}
+function filterOrders(){const q=(document.getElementById('orderSearch')||{value:''}).value.trim().toLowerCase();document.querySelectorAll('#orders tr[data-q]').forEach(r=>{r.style.display=r.dataset.q.includes(q)?'':'none'})}
+function esc(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;').replace(/'/g,'&#039;')}
+function money(v){return Number(v||0).toLocaleString('vi-VN')+' đ'}
+function badge(s){const v=String(s||'');const labels={pending:'Chờ',working:'Đang làm',completed:'Hoàn thành',cancelled:'Đã hủy',approved:'Đã duyệt',rejected:'Từ chối'};return '<span class="badge b-'+esc(v.toLowerCase())+'">'+esc(labels[v.toLowerCase()]||v)+'</span>'}
+function parseExtra(extra){
+  if(extra===null||extra===undefined||extra==='')return null;
+  if(typeof extra==='object')return extra;
+  const raw=String(extra).trim();
+  try{const parsed=JSON.parse(raw);if(parsed&&typeof parsed==='object')return parsed}catch{}
+  return raw;
+}
+function pickExtra(extra,keys){
+  const x=parseExtra(extra);
+  if(!x)return '';
+  if(typeof x==='object'){
+    for(const k of keys){if(x[k]!==undefined&&x[k]!==null&&String(x[k]).trim()!=='')return String(x[k]).trim()}
+    const nested=[x.data,x.order_data,x.orderData,x.contact,x.login,x.credentials];
+    for(const n of nested){if(n&&typeof n==='object'){for(const k of keys){if(n[k]!==undefined&&n[k]!==null&&String(n[k]).trim()!=='')return String(n[k]).trim()}}}
+    return '';
+  }
+  const raw=x;
+  for(const label of keys){
+    const re=new RegExp('(?:'+label.replace(/[.*+?^${}()|[\\]\\]/g,'\\\\$&')+')\\s*[:=]\\s*([^|;\\n]+)','i');
+    const m=raw.match(re);if(m&&m[1])return m[1].trim();
+  }
+  return '';
+}
+function backupCode(extra){return pickExtra(extra,['support_code','login_support_code','loginSupportCode','supportCode','login_support','loginSupport','backup_code','backupCode','recovery_code','recoveryCode','backup','recovery','ma_du_phong','maDuPhong','Mã hỗ trợ đăng nhập Roblox','Mã hỗ trợ đăng nhập','Mã dự phòng','Mã khôi phục'])}
+function phoneNumber(extra){return pickExtra(extra,['phone','phone_number','phoneNumber','phone_code','sdt','so_dien_thoai','soDienThoai','mobile','mobile_number','mobileNumber','SĐT','Số điện thoại','So dien thoai'])}
+
+
+async function api(path,options={}){if(!SUPABASE_URL||!SUPABASE_ANON_KEY)throw Error('Chưa cấu hình Supabase URL/Anon Key.');const headers={'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+(token||SUPABASE_ANON_KEY),'Content-Type':'application/json',...(options.headers||{})};const r=await fetch(SUPABASE_URL+'/rest/v1/'+path,{...options,headers});const text=await r.text();if(!r.ok){const expired=r.status===401||/JWT expired/i.test(text);if(expired&&!options._retried&&token){if(await refreshSession())return api(path,{...options,_retried:true});throw Error('Phiên đăng nhập admin đã hết hạn. Hãy đăng xuất rồi đăng nhập lại.')}throw Error(text||r.statusText)}return text?JSON.parse(text):null}
+async function rpc(fn,body){return api('rpc/'+fn,{method:'POST',body:JSON.stringify(body)})}
+let refreshing=null;
+function refreshSession(){if(refreshing)return refreshing;refreshing=(async()=>{const rt=localStorage.getItem('shopzicl_refresh_token');if(!rt)return false;try{const r=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{apikey:SUPABASE_ANON_KEY,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:rt})});const d=await r.json();if(!r.ok||!d.access_token)return false;token=d.access_token;localStorage.setItem('shopzicl_access_token',token);if(d.refresh_token)localStorage.setItem('shopzicl_refresh_token',d.refresh_token);return true}catch(e){return false}})().finally(()=>{refreshing=null});return refreshing}
+async function getAuthUser(retry=true){if(!token)return null;const r=await fetch(SUPABASE_URL+'/auth/v1/user',{headers:{apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+token}});if(!r.ok){if(retry&&await refreshSession())return getAuthUser(false);return null}return r.json()}
+async function init(){if(!SUPABASE_URL||!SUPABASE_ANON_KEY){showSetup();return}try{const u=await getAuthUser();if(!u){showLogin();return}const rows=await api('profiles?select=id,username,role,balance,created_at&id=eq.'+encodeURIComponent(u.id));profile=rows[0];if(!profile||profile.role!=='admin'){showDenied();return}render()}catch(e){showLogin(e.message)}}
+function showSetup(){root.innerHTML='<div class="login"><h2>⚙ Cấu hình Admin</h2><p>Đặt Supabase URL và anon key trước khi dùng.</p><input id="su" placeholder="https://xxxx.supabase.co"><input id="sk" placeholder="Supabase anon key"><button onclick="saveSetup()">LƯU CẤU HÌNH</button></div>'}
+function saveSetup(){localStorage.setItem('shopzicl_supabase_url',document.getElementById('su').value.trim());localStorage.setItem('shopzicl_supabase_anon_key',document.getElementById('sk').value.trim());location.reload()}
+function showLogin(msg=''){root.innerHTML='<div class="login"><h2>🔐 Shop Của Bạn Admin</h2><p>'+esc(msg||'Đăng nhập tài khoản Admin của shop.')+'</p><input id="em" type="email" placeholder="Email Admin"><input id="pw" type="password" placeholder="Mật khẩu"><button onclick="login()">ĐĂNG NHẬP</button></div>'}
+async function login(){try{const r=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:SUPABASE_ANON_KEY,'Content-Type':'application/json'},body:JSON.stringify({email:em.value,password:pw.value})});const d=await r.json();if(!r.ok)throw Error(d.error_description||'Đăng nhập thất bại');token=d.access_token;localStorage.setItem('shopzicl_access_token',token);if(d.refresh_token)localStorage.setItem('shopzicl_refresh_token',d.refresh_token);init()}catch(e){alert(e.message)}}
+function showDenied(){root.innerHTML='<div class="login"><h2>⛔ Không có quyền</h2><p>Tài khoản này chưa được cấp quyền Admin.</p><button onclick="logout()">ĐĂNG XUẤT</button></div>'}
+async function logout(){token=null;localStorage.removeItem('shopzicl_access_token');localStorage.removeItem('shopzicl_refresh_token');location.reload()}
+function render(){root.innerHTML=`<header class="top"><h1>🛠️ Shop Của Bạn — Admin</h1><div class="top-right"><div class="user-chip"><i>${esc((profile.username||'A').charAt(0).toUpperCase())}</i><span>${esc(profile.username)}</span></div><button class="logout" onclick="logout()">Đăng xuất</button></div></header><main class="wrap"><div class="stats"><div class="stat s-cyan">👥 Khách hàng<b id="sUsers">...</b></div><div class="stat s-violet">📦 Đơn hàng<b id="sOrders">...</b></div><div class="stat s-green">💳 Thẻ chờ duyệt<b id="sDeposits">...</b></div><div class="stat s-gold">💰 Tổng số dư<b id="sBalance">...</b></div></div><div class="tabs"><button class="active" onclick="tab('users',this)">👥 Khách hàng</button><button onclick="tab('deposits',this)">💳 Duyệt thẻ</button><button onclick="tab('orders',this)">📦 Đơn hàng</button><button onclick="tab('transactions',this)">💰 Lịch sử tiền</button><button onclick="tab('topnap',this)">🏆 Top nạp</button><button onclick="tab('accstock',this)">🗃️ Kho acc</button><button onclick="tab('chat',this)">💬 Chat khách</button><button onclick="tab('ipban',this)">🌐 Chặn IP</button><button onclick="tab('services',this)">🧰 Dịch vụ &amp; Giá</button></div><section id="users" class="panel active"></section><section id="deposits" class="panel"></section><section id="orders" class="panel"></section><section id="transactions" class="panel"></section><section id="topnap" class="panel"></section><section id="accstock" class="panel"></section><section id="chat" class="panel"><div id="adminChat"></div></section><section id="ipban" class="panel"></section><section id="services" class="panel"></section></main>`;loadAll();startAdminChatRealtime()}
+function tab(id,b){document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');b.classList.add('active');if(id==='chat'){renderChatShell();startAdminChatRealtime()}if(id==='services')loadServiceMgmt()}
+
+let chatUserId=null,chatChannel=null,adminChatSending=false;
+let chatStatusOn=true,adminChatTimer=null,adminChatTick=0,adminChatSig='',chatForceBottom=false;
+let bansMap={},overrides={},allUsersCache=[],allDepositsCache=[],userBusy=false,pendingDeleteName='',accStockRows=[];
+function renderChatShell(){
+ document.getElementById('adminChat').innerHTML='<div class="chat-layout"><div class="chat-list"><div class="chat-list-head">💬 Khách đang chat</div><div id="chatUsers" class="chat-users"><div class="empty">Đang tải...</div></div></div><div class="chat-window"><div id="chatHead" class="chat-head">Chọn một khách để xem tin nhắn</div><div id="chatMessages" class="chat-messages"><div class="empty">Chưa chọn khách</div></div><div class="chat-compose"><input id="chatInput" maxlength="2000" placeholder="Nhập tin nhắn cho khách..." onkeydown="if(event.key===\'Enter\')sendAdminChat()"><button id="chatSendBtn" onclick="sendAdminChat()">Gửi</button></div></div></div>';
+ loadChatUsers();
+}
+async function loadChatUsers(){
+ try{
+  const msgs=await api('shop_chat_messages?select=user_id,created_at,message&order=created_at.desc');
+  const ids=[...new Set(msgs.map(x=>x.user_id))];
+  const box=document.getElementById('chatUsers'); if(!box)return;
+  if(!ids.length){box.innerHTML='<div class="empty">Chưa có khách nhắn tin.</div>';return}
+  const users=await api('profiles?select=id,username&id=in.('+ids.join(',')+')');
+  const map=Object.fromEntries(users.map(u=>[u.id,u]));
+  box.innerHTML=ids.map(id=>{
+   const u=map[id]||{username:id}; const last=msgs.find(m=>m.user_id===id);
+   return '<div class="chat-user '+(chatUserId===id?'active':'')+'" onclick="openAdminChat(\''+id+'\',\''+esc(u.username)+'\')"><b>👤 '+esc(u.username)+'</b><small>'+esc(last?.message||'')+'</small></div>';
+  }).join('');
+ }catch(e){console.error(e)}
+}
+function chatStatusHtml(m){if(!chatStatusOn)return '<span class="st st-sent">✓ Đã gửi</span>';if(m.read_at)return '<span class="st st-seen">✓✓ Đã xem</span>';if(m.delivered_at)return '<span class="st st-recv">✓✓ Đã nhận</span>';return '<span class="st st-sent">✓ Đã gửi</span>'}
+async function chatSeenRpc(userId,read){if(!chatStatusOn)return;try{await rpc('chat_mark_seen',{p_user_id:userId,p_read:read})}catch(e){if(/chat_mark_seen|delivered_at|column|42703|PGRST202/i.test(String(e.message)))chatStatusOn=false;console.warn(e)}}
+async function markAllDelivered(){if(!chatStatusOn)return;try{const rows=await api('shop_chat_messages?select=user_id&sender_role=eq.customer&delivered_at=is.null');const ids=[...new Set(rows.map(x=>x.user_id))];for(const id of ids)await chatSeenRpc(id,false)}catch(e){if(/delivered_at|column|42703/i.test(String(e.message)))chatStatusOn=false}}
+async function openAdminChat(id,name){chatUserId=id;adminChatSig='';chatForceBottom=true;document.getElementById('chatHead').textContent='💬 Chat với '+name;await loadChatUsers();await loadAdminMessages()}
+async function loadAdminMessages(){
+ if(!chatUserId)return;
+ try{
+  const base='shop_chat_messages?select=id,sender_role,message,created_at';
+  const filt='&user_id=eq.'+encodeURIComponent(chatUserId)+'&order=created_at.asc';
+  let rows;
+  try{rows=await api(base+(chatStatusOn?',delivered_at,read_at':'')+filt)}catch(e){if(chatStatusOn&&/delivered_at|read_at|column|42703/i.test(String(e.message))){chatStatusOn=false;rows=await api(base+filt)}else throw e}
+  const box=document.getElementById('chatMessages'); if(!box)return;
+  if(chatStatusOn&&document.visibilityState==='visible'&&rows.some(m=>m.sender_role==='customer'&&!m.read_at))await chatSeenRpc(chatUserId,true);
+  const sig=JSON.stringify(rows);
+  if(sig===adminChatSig&&!chatForceBottom)return;
+  const stick=chatForceBottom||box.scrollHeight-box.scrollTop-box.clientHeight<80;
+  adminChatSig=sig;
+  box.innerHTML=rows.length?rows.map(m=>{const adm=m.sender_role==='admin';return '<div class="chat-msg '+(adm?'admin':'customer')+'">'+esc(m.message)+'<small>'+new Date(m.created_at).toLocaleString('vi-VN')+'</small>'+(adm?chatStatusHtml(m):'')+'</div>'}).join(''):'<div class="empty">Chưa có tin nhắn.</div>';
+  if(stick)box.scrollTop=box.scrollHeight;
+  chatForceBottom=false;
+ }catch(e){console.error(e)}
+}
+async function sendAdminChat(){
+ if(adminChatSending)return;
+ if(!chatUserId)return alert('Hãy chọn khách trước.');
+ const input=document.getElementById('chatInput');
+ const button=document.getElementById('chatSendBtn');
+ const message=input.value.trim();
+ if(!message)return;
+ adminChatSending=true;
+ input.disabled=true;
+ if(button){button.disabled=true;button.textContent='Đang gửi...';}
+ try{
+  await api('shop_chat_messages',{method:'POST',headers:{Prefer:'return=minimal'},body:JSON.stringify({user_id:chatUserId,sender_role:'admin',message})});
+  input.value='';chatForceBottom=true;
+  await loadAdminMessages();
+  await loadChatUsers();
+ }catch(e){
+  alert('Không gửi được tin nhắn: '+e.message);
+ }finally{
+  adminChatSending=false;
+  input.disabled=false;
+  if(button){button.disabled=false;button.textContent='Gửi';}
+  input.focus();
+ }
+}
+function startAdminChatRealtime(){
+ if(adminChatTimer)return;
+ adminChatTimer=setInterval(async()=>{adminChatTick++;const p=document.getElementById('chat');const active=!!p&&p.classList.contains('active');if(active&&chatUserId)loadAdminMessages();if(adminChatTick%3===0){await markAllDelivered();if(active)loadChatUsers()}},3000);
+}
+
+async function loadAll(){try{const [users,deposits,orders,tx,bans,ovr,stk,ipb]=await Promise.all([api('profiles?select=id,username,role,balance,created_at&order=created_at.desc'),api('deposits?select=id,user_id,card_type,amount,card_serial,card_code,status,note,created_at&order=created_at.desc'),fetchOrders(),api('balance_transactions?select=id,user_id,amount,balance_after,type,note,created_at&order=created_at.desc'),rpc('admin_list_bans',{}).catch(()=>[]),api('top_nap_overrides?select=username,hidden,display_amount').catch(()=>[]),api('acc_stock?select=service_name,stock&order=service_name.asc').catch(()=>[]),api('ip_bans?select=ip,user_id,reason,banned_until,created_at&order=created_at.desc').catch(()=>null)]);ipBansOn=Array.isArray(ipb);ipBans=ipBansOn?ipb:[];accStockRows=Array.isArray(stk)?stk:[];bansMap=Object.fromEntries((bans||[]).map(b=>[b.user_id,b.banned_until]));overrides=Object.fromEntries((ovr||[]).map(o=>[o.username,o]));allUsersCache=users;allDepositsCache=deposits;const map=Object.fromEntries(users.map(u=>[u.id,u]));sUsers.textContent=users.filter(u=>u.role==='customer').length;sOrders.textContent=orders.length;sDeposits.textContent=deposits.filter(d=>d.status==='pending').length;sBalance.textContent=money(users.reduce((a,u)=>a+Number(u.balance||0),0));renderUsers(users);renderDeposits(deposits,map);renderOrders(orders,map);renderTx(tx,map);renderTop();renderAccStock();renderIpBans()}catch(e){alert(e.message)}}
+function renderUsers(users){document.getElementById('users').innerHTML='<h2>👥 Quản lý khách hàng</h2><div class="table-wrap"><table class="table"><tr><th>Tài khoản</th><th>Vai trò</th><th>Tình trạng</th><th>Số dư</th><th>Thao tác</th></tr>'+users.map(u=>{const ban=bansMap[u.id];const st=(u.role==='customer'&&ban)?'<span class="badge b-cancelled">Cấm đến '+esc(fmtDT(ban))+'</span>':'<span class="badge b-approved">Hoạt động</span>';return `<tr><td><b>${esc(u.username)}</b></td><td><span class="badge b-${esc(u.role)}">${esc(u.role)}</span></td><td>${st}</td><td><b class="money">${money(u.balance)}</b></td><td>${u.role==='customer'?`<button class="btn green" onclick="adjust('${u.id}',1)">➕ Cộng</button><button class="btn red" onclick="adjust('${u.id}',-1)">➖ Trừ</button><button class="btn blue" onclick="setBalance('${u.id}')">💰 Đặt số dư</button><button class="btn yellow" onclick="openBanModal('${u.id}')">🚫 Cấm</button><button class="btn blue" onclick="openIpModal('${u.id}')">🌐 Chặn IP</button><button class="btn red" onclick="openDeleteModal('${u.id}')">🗑️ Xóa</button>`:'Admin'}</td></tr>`}).join('')+'</table></div>'}
+function renderDeposits(ds,map){document.getElementById('deposits').innerHTML='<h2>💳 Duyệt thẻ cào</h2><div class="notice">Chỉ bấm duyệt sau khi bạn đã kiểm tra thẻ hợp lệ.</div><div class="table-wrap"><table class="table"><tr><th>Khách</th><th>Nhà mạng</th><th>Mệnh giá</th><th>Seri</th><th>Mã thẻ</th><th>Trạng thái</th><th>Thao tác</th></tr>'+ds.map(d=>`<tr><td>${esc(map[d.user_id]?.username||d.user_id)}</td><td>${esc(d.card_type)}</td><td><b class="money">${money(d.amount)}</b></td><td><span class="secret">${esc(d.card_serial)}</span></td><td><span class="secret">${esc(d.card_code)}</span></td><td>${badge(d.status)}</td><td>${d.status==='pending'?`<button class="btn green" onclick="reviewDeposit('${d.id}',true)">✅ Duyệt + cộng tiền</button><button class="btn red" onclick="reviewDeposit('${d.id}',false)">❌ Từ chối</button>`:'Đã xử lý'}</td></tr>`).join('')+'</table></div>'}
+window.__ordersCache=[];
+let adminNoteCache={};
+function openAdminNote(id){if(userBusy)return;const o=(window.__ordersCache||[]).find(x=>String(x.id)===String(id))||{};showUserModal('<h2 style="color:var(--cyan)">💬 Cập nhật cho khách</h2><p>Đơn <b>'+esc(o.order_code||'')+'</b> · '+esc(o.package_name||'')+'</p><p>Nội dung này hiện ở ô <b>"Admin cập nhật"</b> trong trang chi tiết đơn của khách (ví dụ: tiến độ, thông tin acc đã giao, lý do huỷ…). Để trống rồi lưu để xoá.</p><textarea id="adminNoteIn" class="del-input" maxlength="2000" rows="5" style="resize:vertical;font-family:inherit;line-height:1.6">'+esc(o.admin_note||'')+'</textarea><div class="confirm-actions"><button class="cancel-confirm" onclick="closeUserModal()">Huỷ</button><button class="danger-confirm" style="background:linear-gradient(135deg,#0891b2,#0e7490);box-shadow:0 10px 28px rgba(8,145,178,.4)" onclick="saveAdminNote(\''+id+'\')">Lưu</button></div>');setTimeout(()=>document.getElementById('adminNoteIn').focus(),50)}
+function saveAdminNote(id){const v=document.getElementById('adminNoteIn').value.trim();runUserAction(()=>rpc('admin_set_order_note',{p_order_id:String(id),p_note:v}),'✅ Đã lưu cập nhật cho khách.')}
+function renderOrders(os,map){window.__ordersCache=os;const oldQ=(document.getElementById('orderSearch')||{value:''}).value;document.getElementById('orders').innerHTML='<h2>📦 Quản lý đơn hàng</h2><input id="orderSearch" class="search-input" placeholder="🔍 Tìm theo mã đơn, khách, dịch vụ..." oninput="filterOrders()"><div class="table-wrap"><table class="table"><tr><th>Mã đơn</th><th>Khách</th><th>Thông tin tài khoản</th><th>Dịch vụ</th><th>Gói</th><th>Giá</th><th>Trạng thái</th><th>Thao tác</th></tr>'+os.map(o=>{const rid=o.game_username||o.account||'';const rpw=o.game_password||o.password||'';const backup=o.login_support_code||backupCode(o.extra_data);const phone=o.phone_number||phoneNumber(o.extra_data);return `<tr data-q="${esc(((o.order_code||'')+' '+(map[o.user_id]?.username||'')+' '+(o.service_name||'')+' '+(o.package_name||'')).toLowerCase())}"><td><span class="secret order-code">${esc(o.order_code||'—')}</span></td><td>${esc(map[o.user_id]?.username||o.user_id)}</td><td class="order-info"><div>🎮 <b>ID Roblox:</b> <span class="secret">${esc(rid||'Chưa có')}</span></div><div>🔑 <b>Mật khẩu:</b> <span class="secret">${esc(rpw||'Chưa có')}</span></div><div>📱 <b>Số điện thoại:</b> <span class="secret">${esc(phone||'Chưa có')}</span></div><div>🛡️ <b>Mã hỗ trợ đăng nhập Roblox:</b> <span class="secret">${esc(backup||'Chưa có')}</span></div>${o.customer_note?`<div class="order-note">📝 <b>Ghi chú của khách:</b><span>${esc(o.customer_note)}</span></div>`:''}${o.admin_note?`<div class="order-note admin-reply">💬 <b>Admin cập nhật:</b><span>${esc(o.admin_note)}</span></div>`:''}</td><td>${esc(o.service_name)}</td><td>${esc(o.package_name)}</td><td><b class="money">${money(o.price)}</b></td><td>${badge(o.status)}</td><td><button class="btn blue" onclick="openAdminNote('${o.id}')">💬 Cập nhật cho khách</button><button class="btn yellow" onclick="orderStatus('${o.id}','pending')">Chờ</button><button class="btn blue" onclick="orderStatus('${o.id}','working')">Đang làm</button><button class="btn green" onclick="orderStatus('${o.id}','completed')">Hoàn thành</button>${o.status!=='cancelled'?`<button class="btn red" onclick="openCancelConfirm('${o.id}','${esc(map[o.user_id]?.username||'Khách')} — ${esc(o.package_name)} — ${money(o.price)}')">❌ Hủy</button>`:'<span class="ok-text">Đã hủy + hoàn tiền</span>'}</td></tr>`}).join('')+'</table></div>';const inp=document.getElementById('orderSearch');if(inp&&oldQ){inp.value=oldQ;filterOrders()}}
+function renderTx(ts,map){document.getElementById('transactions').innerHTML='<h2>💰 Lịch sử biến động số dư</h2><div class="table-wrap"><table class="table"><tr><th>Khách</th><th>Biến động</th><th>Số dư sau</th><th>Loại</th><th>Ghi chú</th><th>Thời gian</th></tr>'+ts.map(t=>`<tr><td>${esc(map[t.user_id]?.username||t.user_id)}</td><td class="${Number(t.amount)>=0?'pos':'neg'}"><b class="${Number(t.amount)>=0?'pos':'neg'}">${Number(t.amount)>=0?'+':''}${money(t.amount)}</b></td><td><b class="money">${money(t.balance_after)}</b></td><td>${esc(t.type)}</td><td>${esc(t.note)}</td><td>${new Date(t.created_at).toLocaleString('vi-VN')}</td></tr>`).join('')+'</table></div>'}
+function openCancelConfirm(id,label){if(cancelBusy)return;pendingCancelId=id;pendingCancelLabel=label;document.getElementById('cancelConfirmText').textContent='Bạn có chắc muốn hủy đơn: '+label+'?';document.getElementById('cancelConfirm').classList.add('show');document.getElementById('confirmCancelBtn').disabled=false;document.getElementById('confirmCancelBtn').textContent='Xác nhận hủy + hoàn tiền'}
+function closeCancelConfirm(){if(cancelBusy)return;pendingCancelId=null;pendingCancelLabel='';document.getElementById('cancelConfirm').classList.remove('show')}
+async function confirmCancelOrder(){if(cancelBusy||!pendingCancelId)return;cancelBusy=true;const id=pendingCancelId;const btn=document.getElementById('confirmCancelBtn');const closeBtn=document.querySelector('.cancel-confirm');btn.disabled=true;closeBtn.disabled=true;btn.textContent='⏳ Đang hủy...';try{await rpc('admin_set_order_status',{p_order_id:id,p_status:'cancelled'});pendingCancelId=null;pendingCancelLabel='';document.getElementById('cancelConfirm').classList.remove('show');await refreshOrdersOnly();alert('✅ Đã hủy đơn và hoàn tiền cho khách (nếu đơn đã được trừ tiền).')}catch(e){alert('Không thể hủy đơn: '+e.message)}finally{cancelBusy=false;btn.disabled=false;closeBtn.disabled=false;btn.textContent='Xác nhận hủy + hoàn tiền'}}
+async function refreshOrdersOnly(){try{const [users,orders]=await Promise.all([api('profiles?select=id,username,balance'),fetchOrders()]);const map=Object.fromEntries(users.map(u=>[u.id,u]));renderOrders(orders,map);const sb=document.getElementById('sOrders');if(sb)sb.textContent=orders.length;const balance=document.getElementById('sBalance');if(balance)balance.textContent=money(users.reduce((a,u)=>a+Number(u.balance||0),0))}catch(e){console.error('refreshOrdersOnly:',e)}}
+async function adjust(id,sign){const raw=prompt('Nhập số tiền '+(sign>0?'cộng':'trừ')+':');const n=Number(raw);if(!Number.isInteger(n)||n<=0)return alert('Số tiền không hợp lệ');try{await rpc('admin_adjust_balance',{p_user_id:id,p_amount:n*sign,p_note:'Admin điều chỉnh số dư'});loadAll()}catch(e){alert(e.message)}}
+async function setBalance(id){const users=await api('profiles?select=balance&id=eq.'+id);const current=users[0]?.balance||0;const raw=prompt('Nhập số dư mới:',current);const target=Number(raw);if(!Number.isInteger(target)||target<0)return alert('Số dư không hợp lệ');try{await rpc('admin_adjust_balance',{p_user_id:id,p_amount:target-current,p_note:'Admin đặt lại số dư'});loadAll()}catch(e){alert(e.message)}}
+async function reviewDeposit(id,approve){let reason=null;if(!approve){reason=prompt('Lý do từ chối:')||'Thẻ không hợp lệ'}if(!confirm(approve?'Duyệt thẻ và cộng tiền cho khách?':'Từ chối thẻ này?'))return;try{await rpc('admin_review_deposit',{p_deposit_id:id,p_approve:approve,p_reason:reason});loadAll()}catch(e){alert(e.message)}}
+async function orderStatus(id,status){if(status==='cancelled'){openCancelConfirm(id,'đơn hàng này');return}try{await rpc('admin_set_order_status',{p_order_id:id,p_status:status});loadAll()}catch(e){alert(e.message)}}
+function fmtDT(v){return new Date(v).toLocaleString('vi-VN')}
+function userById(id){return allUsersCache.find(x=>x.id===id)}
+function showUserModal(html){document.getElementById('userModalBox').innerHTML=html;document.getElementById('userModal').classList.add('show')}
+function closeUserModal(){if(userBusy)return;document.getElementById('userModal').classList.remove('show')}
+function openBanModal(id){const u=userById(id);if(!u||userBusy)return;const ban=bansMap[id];showUserModal('<h2>🚫 Cấm tài khoản</h2><p>Khách: <b>'+esc(u.username)+'</b>'+(ban?'<br>Đang bị cấm đến '+esc(fmtDT(ban))+'.':'')+'</p><p>Chọn thời gian cấm. Khách sẽ bị đăng xuất và không đăng nhập lại được cho đến khi hết hạn.</p><div class="ban-grid"><button class="btn yellow" onclick="banUser(\''+id+'\',1)">⏱️ 1 ngày</button><button class="btn blue" onclick="banUser(\''+id+'\',7)">📅 7 ngày</button><button class="btn red" onclick="banUser(\''+id+'\',30)">🗓️ 1 tháng</button></div>'+(ban?'<button class="btn green" style="width:100%;margin:10px 0 0;padding:12px" onclick="unbanUser(\''+id+'\')">✅ Bỏ cấm ngay</button>':'')+'<div class="confirm-actions"><button class="cancel-confirm" onclick="closeUserModal()">Đóng</button></div>')}
+async function runUserAction(fn,okMsg){userBusy=true;document.querySelectorAll('#userModalBox button').forEach(b=>b.disabled=true);try{await fn();userBusy=false;document.getElementById('userModal').classList.remove('show');await loadAll();alert(okMsg)}catch(e){userBusy=false;document.querySelectorAll('#userModalBox button').forEach(b=>b.disabled=false);alert('Không thực hiện được: '+e.message)}}
+function banUser(id,days){runUserAction(()=>rpc('admin_ban_user',{p_user_id:id,p_days:days}),'✅ Đã cấm tài khoản '+(days===30?'1 tháng':days+' ngày')+'.')}
+function unbanUser(id){runUserAction(()=>rpc('admin_unban_user',{p_user_id:id}),'✅ Đã bỏ cấm tài khoản.')}
+function openDeleteModal(id){const u=userById(id);if(!u||userBusy)return;pendingDeleteName=u.username;showUserModal('<h2>🗑️ Xóa tài khoản vĩnh viễn</h2><p>Khách: <b>'+esc(u.username)+'</b> — số dư '+esc(money(u.balance))+'</p><p class="notice">Sẽ xóa luôn toàn bộ đơn hàng, lịch sử nạp, lịch sử tiền và tin nhắn của khách này. Không thể khôi phục.</p><p>Nhập chính xác tên tài khoản để xác nhận:</p><input id="delConfirmInput" class="del-input" autocomplete="off" oninput="checkDeleteInput()" placeholder="'+esc(u.username)+'"><div class="confirm-actions"><button class="cancel-confirm" onclick="closeUserModal()">Không, quay lại</button><button id="delConfirmBtn" class="danger-confirm" disabled onclick="confirmDeleteUser(\''+id+'\')">Xóa vĩnh viễn</button></div>')}
+function checkDeleteInput(){const i=document.getElementById('delConfirmInput'),b=document.getElementById('delConfirmBtn');if(i&&b)b.disabled=i.value.trim()!==pendingDeleteName}
+function confirmDeleteUser(id){const i=document.getElementById('delConfirmInput');if(!i||i.value.trim()!==pendingDeleteName)return;runUserAction(()=>rpc('admin_delete_user',{p_user_id:id}),'✅ Đã xóa vĩnh viễn tài khoản.')}
+function topRows(){const real={};allDepositsCache.forEach(d=>{if(d.status==='approved')real[d.user_id]=(real[d.user_id]||0)+Number(d.amount||0)});return allUsersCache.filter(u=>u.role==='customer').map(u=>{const o=overrides[u.username]||null;const r=real[u.id]||0;const has=!!o&&o.display_amount!==null&&o.display_amount!==undefined;return {u,r,o,shown:has?Number(o.display_amount):r,custom:has,hidden:!!(o&&o.hidden)}}).sort((a,b)=>b.shown-a.shown)}
+function renderTop(){const el=document.getElementById('topnap');if(!el)return;const rows=topRows();let rank=0;el.innerHTML='<h2>🏆 Quản lý TOP nạp</h2><div class="notice">TOP nạp trên web hiển thị 5 khách có số tiền cao nhất. Mặc định lấy theo tổng thẻ đã duyệt; bạn có thể sửa số hiển thị hoặc ẩn khách khỏi TOP. Chỉ đổi phần hiển thị trên TOP, không ảnh hưởng số dư thật của khách.</div><div class="table-wrap"><table class="table"><tr><th>Hạng</th><th>Khách</th><th>Nạp thật (đã duyệt)</th><th>Đang hiển thị</th><th>Trạng thái</th><th>Thao tác</th></tr>'+(rows.length?rows.map(x=>{const inTop=!x.hidden&&x.shown>0;const rk=inTop?++rank:'—';const medal=rk===1?'🥇':rk===2?'🥈':rk===3?'🥉':rk;return `<tr class="${x.hidden?'dim-row':''}"><td><b>${medal}</b></td><td><b>${esc(x.u.username)}</b></td><td>${money(x.r)}</td><td><b class="money">${money(x.shown)}</b>${x.custom?' <span class="badge b-working">Đã sửa</span>':''}</td><td>${x.hidden?'<span class="badge b-cancelled">Đang ẩn</span>':(x.shown>0?'<span class="badge b-approved">Hiển thị</span>':'<span class="badge b-pending">Chưa có số nạp</span>')}</td><td><button class="btn blue" onclick="editTopAmount('${x.u.id}')">✏️ Sửa số hiển thị</button><button class="btn yellow" onclick="toggleTopHidden('${x.u.id}')">${x.hidden?'👁️ Hiện lại':'🙈 Ẩn khỏi TOP'}</button>${x.o?`<button class="btn green" onclick="resetTop('${x.u.id}')">↩️ Đặt lại</button>`:''}</td></tr>`}).join(''):'<tr><td colspan="6" class="empty">Chưa có khách hàng.</td></tr>')+'</table></div>'}
+async function editTopAmount(id){const u=userById(id);if(!u)return;const o=overrides[u.username];const cur=o&&o.display_amount!==null&&o.display_amount!==undefined?o.display_amount:'';const raw=prompt('Nhập số tiền hiển thị trong TOP nạp (để trống = dùng số nạp thật):',cur);if(raw===null)return;const t=raw.trim();let amt=null;if(t!==''){amt=Number(t);if(!Number.isInteger(amt)||amt<0)return alert('Số tiền không hợp lệ')}try{await rpc('admin_set_top_override',{p_user_id:id,p_hidden:!!(o&&o.hidden),p_display_amount:amt});loadAll()}catch(e){alert(e.message)}}
+async function toggleTopHidden(id){const u=userById(id);if(!u)return;const o=overrides[u.username];const has=o&&o.display_amount!==null&&o.display_amount!==undefined;try{await rpc('admin_set_top_override',{p_user_id:id,p_hidden:!(o&&o.hidden),p_display_amount:has?Number(o.display_amount):null});loadAll()}catch(e){alert(e.message)}}
+async function resetTop(id){if(!confirm('Đặt lại về số nạp thật và hiện khách này trong TOP?'))return;try{await rpc('admin_clear_top_override',{p_user_id:id});loadAll()}catch(e){alert(e.message)}}
+function renderAccStock(){const el=document.getElementById('accstock');if(!el)return;el.innerHTML='<h2>🗃️ Kho acc</h2><div class="notice">Số acc còn lại hiển thị trên web shop. Khi khách đặt đơn acc thì tự trừ 1, khi bạn bấm Hủy + hoàn tiền thì tự cộng lại 1. Nhập acc mới thì bấm Sửa để đặt lại số lượng.</div><div class="table-wrap"><table class="table"><tr><th>Dịch vụ</th><th>Số acc còn lại</th><th>Thao tác</th></tr>'+(accStockRows.length?accStockRows.map((x,i)=>`<tr><td><b>${esc(x.service_name)}</b></td><td><b class="money">${Number(x.stock)}</b></td><td><button class="btn blue" onclick="editAccStock(${i})">✏️ Sửa số acc</button></td></tr>`).join(''):'<tr><td colspan="3" class="empty">Chưa có dữ liệu kho. Hãy chạy file SQL kho acc trong Supabase.</td></tr>')+'</table></div>'}
+async function editAccStock(i){const x=accStockRows[i];if(!x)return;const raw=prompt('Nhập số acc còn lại cho "'+x.service_name+'":',x.stock);if(raw===null)return;const n=Number(raw.trim());if(!Number.isInteger(n)||n<0)return alert('Số acc không hợp lệ');try{await rpc('admin_set_acc_stock',{p_service:x.service_name,p_stock:n});loadAll()}catch(e){alert(e.message)}}
+
+let ipBans=[],ipBansOn=false;
+function activeBan(b){return !b.banned_until||new Date(b.banned_until)>new Date()}
+function banUntilText(b){return b.banned_until?fmtDT(b.banned_until):'Vĩnh viễn'}
+function ipDurGrid(fn){return '<div class="ban-grid ip-dur">'+[[1,'⏱️ 1 ngày','yellow'],[7,'📅 7 ngày','blue'],[30,'🗓️ 1 tháng','red'],[0,'⛔ Vĩnh viễn','red']].map(([d,l,c])=>'<button class="btn '+c+'" onclick="'+fn+'('+d+')">'+l+'</button>').join('')+'</div>'}
+let ipModalUser=null;
+async function openIpModal(id){const u=userById(id);if(!u||userBusy)return;ipModalUser=id;showUserModal('<h2 style="color:var(--cyan)">🌐 Chặn IP</h2><p>Đang tải IP của <b>'+esc(u.username)+'</b>...</p>');let ips;try{ips=await api('customer_ips?select=ip,first_seen,last_seen,hits&user_id=eq.'+encodeURIComponent(id)+'&order=last_seen.desc')}catch(e){showUserModal('<h2 style="color:var(--cyan)">🌐 Chặn IP</h2><p class="notice">Chưa đọc được danh sách IP. Hãy chạy file SQL chặn IP trong Supabase trước.<br><small>'+esc(e.message)+'</small></p><div class="confirm-actions"><button class="cancel-confirm" onclick="closeUserModal()">Đóng</button></div>');return}const banned=new Map(ipBans.filter(activeBan).map(b=>[b.ip,b]));const list=ips.length?'<div class="ip-list">'+ips.map((x,i)=>{const b=banned.get(x.ip);return '<label class="ip-row'+(b?' is-banned':'')+'"><input type="checkbox" class="ip-pick" value="'+esc(x.ip)+'"'+(i===0&&!b?' checked':'')+(b?' disabled':'')+'><span class="ip-addr">'+esc(x.ip)+'</span><span class="ip-meta">Lần cuối '+esc(fmtDT(x.last_seen))+' · '+Number(x.hits||1)+' lần</span>'+(b?'<span class="badge b-cancelled">Đã chặn · '+esc(banUntilText(b))+'</span>':'')+'</label>'}).join('')+'</div>':'<p class="notice">Khách này chưa có IP nào được ghi lại. IP chỉ được ghi khi khách mở shop trong lúc đã đăng nhập. Nếu biết IP, bạn vào tab "Chặn IP" để nhập tay.</p>';showUserModal('<h2 style="color:var(--cyan)">🌐 Chặn IP</h2><p>Khách: <b>'+esc(u.username)+'</b>. Chọn IP rồi chọn thời gian chặn. Mạng đó sẽ không vào được shop, không đặt đơn, nạp thẻ hay chat được nữa.</p>'+list+(ips.length?'<input id="ipReason" class="del-input" maxlength="200" placeholder="Lý do (khách sẽ thấy dòng này)" style="margin-top:12px">'+ipDurGrid('banPickedIps'):'')+'<div class="confirm-actions"><button class="cancel-confirm" onclick="closeUserModal()">Đóng</button></div>')}
+function banPickedIps(days){const ips=[...document.querySelectorAll('.ip-pick:checked')].map(x=>x.value);if(!ips.length)return alert('Chọn ít nhất 1 IP để chặn');const reason=(document.getElementById('ipReason')||{value:''}).value.trim();const uid=ipModalUser;runUserAction(async()=>{for(const ip of ips)await rpc('admin_ban_ip',{p_ip:ip,p_days:days||null,p_reason:reason||null,p_user_id:uid})},'✅ Đã chặn '+ips.length+' IP '+(days?days===30?'1 tháng':days+' ngày':'vĩnh viễn')+'.')}
+function renderIpBans(){const el=document.getElementById('ipban');if(!el)return;const umap=Object.fromEntries(allUsersCache.map(u=>[u.id,u.username]));const rows=ipBans.slice().sort((a,b)=>Number(activeBan(b))-Number(activeBan(a)));el.innerHTML='<h2>🌐 Chặn IP</h2>'+(ipBansOn?'':'<div class="notice">Chưa có bảng chặn IP. Hãy chạy file SQL ip_ban.sql trong Supabase.</div>')+'<div class="notice">Mạng bị chặn sẽ thấy màn hình "Mạng của bạn đã bị chặn" khi vào shop, và không đặt đơn, nạp thẻ hay chat được. Lưu ý: wifi trường học, quán net hay 4G có thể nhiều người dùng chung 1 IP, chặn sẽ ảnh hưởng cả họ.</div><div class="svc-card"><h3>➕ Chặn IP nhập tay</h3><div class="ip-form"><input id="ipManual" class="search-input" placeholder="Ví dụ: 113.161.20.45"><input id="ipManualReason" class="search-input" maxlength="200" placeholder="Lý do (không bắt buộc)"></div>'+ipDurGrid('banManualIp')+'</div><div class="table-wrap"><table class="table"><tr><th>IP</th><th>Khách</th><th>Lý do</th><th>Chặn đến</th><th>Trạng thái</th><th>Thao tác</th></tr>'+(rows.length?rows.map(b=>{const on=activeBan(b);return '<tr class="'+(on?'':'dim-row')+'"><td><span class="secret">'+esc(b.ip)+'</span></td><td>'+esc(b.user_id?(umap[b.user_id]||'Đã xoá'):'—')+'</td><td>'+esc(b.reason||'—')+'</td><td>'+esc(banUntilText(b))+'</td><td>'+(on?'<span class="badge b-cancelled">Đang chặn</span>':'<span class="badge b-approved">Hết hạn</span>')+'</td><td><button class="btn green" onclick="unbanIp('+jsStr(b.ip)+')">✅ Bỏ chặn</button></td></tr>'}).join(''):'<tr><td colspan="6" class="empty">Chưa chặn IP nào.</td></tr>')+'</table></div>'}
+async function banManualIp(days){const ip=document.getElementById('ipManual').value.trim();if(!ip)return alert('Nhập IP cần chặn');const reason=document.getElementById('ipManualReason').value.trim();if(!confirm('Chặn IP '+ip+' '+(days?days===30?'1 tháng':days+' ngày':'vĩnh viễn')+'?'))return;try{await rpc('admin_ban_ip',{p_ip:ip,p_days:days||null,p_reason:reason||null,p_user_id:null});await loadAll();alert('✅ Đã chặn IP '+ip+'.')}catch(e){alert('Không chặn được: '+e.message)}}
+async function unbanIp(ip){if(!confirm('Bỏ chặn IP '+ip+'?'))return;try{await rpc('admin_unban_ip',{p_ip:ip});await loadAll()}catch(e){alert('Không bỏ chặn được: '+e.message)}}
+let svcCatalog=null,svcAvatars={},svcCatalogLoaded=false,svcRowsCache=[],svcBusy=false,svcHidden=new Set(),svcFields={},svcFieldsOn=true,svcTypes={},svcTypesOn=true,svcNotes={},svcNotesOn=true;
+const TYPE_OPTS=[['account','Tài khoản'],['boost','Cày thuê'],['item','Vật phẩm']];
+function guessType(svc){if(/^acc\b/i.test(svc))return 'account';if(/trái|gamepass|robux|chromatic|vv bf/i.test(svc))return 'item';return 'boost'}
+function typeFor(svc){return svcTypes[svc]||guessType(svc||'')}
+function typeSelect(id,v){return '<select id="'+id+'" class="search-input" style="margin:0">'+TYPE_OPTS.map(([k,l])=>'<option value="'+k+'"'+(k===v?' selected':'')+'>'+l+'</option>').join('')+'</select>'}
+async function saveServiceNote(svc,n){if(!svcNotesOn)return;await rpc('admin_set_service_note',{p_service:svc,p_note:n})}
+function noteBox(id,v){return '<textarea id="'+id+'" class="search-input" maxlength="2000" rows="4" style="margin:0;resize:vertical;min-height:96px;font-family:inherit;line-height:1.6" placeholder="Ví dụ: Đưa mã dự phòng trong đơn khi đặt. Mỗi dòng một ý. Để trống nếu không cần.">'+esc(v||'')+'</textarea>'}
+async function saveServiceType(svc,t){if(!svcTypesOn)return;await rpc('admin_set_service_type',{p_service:svc,p_type:t})}
+const NEED_KEYS=[['account','Tài khoản Roblox','TK'],['password','Mật khẩu','MK'],['phone','Số điện thoại','SĐT'],['support','Mã hỗ trợ đăng nhập','Mã HT']];
+function guessFields(svc){const acc=/^acc\b/i.test(svc)||accStockRows.some(x=>x.service_name===svc);const simple=/gamepass|chromatic box|robux 120h|trái vĩnh viễn|trái ác quỷ|vv bf/i.test(svc);return{account:!acc,password:!acc&&!simple,phone:true,support:!acc&&!simple}}
+function fieldsFor(svc){return svcFields[svc]||guessFields(svc)}
+function needBoxes(prefix,f){return '<div class="need-grid">'+NEED_KEYS.map(([k,label])=>'<label class="need-opt"><input type="checkbox" id="'+prefix+k+'"'+(f[k]?' checked':'')+'>'+label+'</label>').join('')+'</div>'}
+function readNeed(prefix){const o={};NEED_KEYS.forEach(([k])=>{const el=document.getElementById(prefix+k);o[k]=!!(el&&el.checked)});return o}
+function needSummary(svc){const f=fieldsFor(svc);const on=NEED_KEYS.filter(([k])=>f[k]).map(x=>x[2]);return '<div class="need-sum">Loại: <b>'+(TYPE_OPTS.find(x=>x[0]===typeFor(svc))||['',''])[1]+'</b>'+(svcNotes[svc]?' · <b>Có lưu ý</b>':'')+'<br>Khách nhập: '+(on.length?'<b>'+on.join(' · ')+'</b>':'<b>không cần</b>')+(svcFields[svc]?'':' (mặc định)')+'</div>'}
+function syncNewServiceNeed(){const svc=document.getElementById('svcNewService').value.trim();const nb=document.getElementById('svcNewNote');if(nb)nb.value=svcNotes[svc]||'';const ts=document.getElementById('svcNewType');if(ts)ts.value=typeFor(svc);const f=fieldsFor(svc||'');NEED_KEYS.forEach(([k])=>{const el=document.getElementById('svcNeed_'+k);if(el)el.checked=!!f[k]})}
+async function saveServiceFields(svc,f){if(!svcFieldsOn)throw Error('Chưa có bảng shop_service_fields. Hãy chạy file SQL trong Supabase trước.');await rpc('admin_set_service_fields',{p_service:svc,p_account:f.account,p_password:f.password,p_phone:f.phone,p_support:f.support})}
+function openFieldsModal(svc){if(svcBusy)return;showUserModal('<h2 style="color:var(--cyan)">⚙️ Thông tin khách cần nhập</h2><p>Dịch vụ: <b>'+esc(svc)+'</b></p><p style="margin:0 0 6px">Loại dịch vụ (quyết định đơn hiện ở trang nào của khách):</p>'+typeSelect('fm_type',typeFor(svc))+'<p>Tick những ô khách phải điền khi thanh toán gói của dịch vụ này.</p>'+needBoxes('fm_',fieldsFor(svc))+'<p style="margin:16px 0 6px">Lưu ý hiển thị đầu trang dịch vụ (khung xanh khách đọc trước khi đặt):</p>'+noteBox('fm_note',svcNotes[svc])+'<div class="confirm-actions"><button class="cancel-confirm" onclick="closeUserModal()">Huỷ</button><button class="danger-confirm" style="background:linear-gradient(135deg,#0891b2,#0e7490);box-shadow:0 10px 28px rgba(8,145,178,.4)" onclick="submitFieldsModal('+jsStr(svc)+')">Lưu cài đặt</button></div>')}
+async function submitFieldsModal(svc){const t=document.getElementById('fm_type').value;const nt=document.getElementById('fm_note').value.trim();runUserAction(async()=>{await saveServiceFields(svc,readNeed('fm_'));await saveServiceType(svc,t);await saveServiceNote(svc,nt);await loadServiceMgmt()},'✅ Đã lưu thông tin cần nhập cho "'+svc+'".')}
+function jsStr(s){return "'"+String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'")+"'"}
+function svcExtractObject(text,marker){const i=text.indexOf(marker);if(i<0)return null;const start=text.indexOf('{',i);if(start<0)return null;let depth=0,j=start;for(;j<text.length;j++){if(text[j]==='{')depth++;else if(text[j]==='}'){depth--;if(depth===0){j++;break}}}return depth===0?text.slice(start,j):null}
+async function loadHardcodedCatalog(){
+ try{
+  const r=await fetch('./index.html',{cache:'no-store'});
+  const html=await r.text();
+  const catSrc=svcExtractObject(html,'const catalog=');
+  svcCatalog=catSrc?new Function('return '+catSrc)():{};
+  const names=[...html.matchAll(/const ([A-Z0-9_]+_IMG)='(data:image\/[a-z+]+;base64,[A-Za-z0-9+\/=]+)'/g)];
+  const avSrc=svcExtractObject(html,'const serviceAvatars=');
+  if(avSrc){
+   const argNames=names.map(m=>m[1]);
+   const argVals=names.map(m=>m[2]);
+   svcAvatars=new Function(...argNames,'return '+avSrc)(...argVals);
+  }else svcAvatars={};
+ }catch(e){console.error('Không đọc được dịch vụ có sẵn:',e);svcCatalog={};svcAvatars={}}
+}
+async function resizeImageFile(file,maxW=480,quality=.75){
+ return new Promise((res,rej)=>{
+  if(!file.type.startsWith('image/'))return rej(Error('Vui lòng chọn một file ảnh'));
+  if(file.size>10*1024*1024)return rej(Error('Ảnh quá lớn, chọn ảnh dưới 10MB'));
+  const url=URL.createObjectURL(file);
+  const img=new Image();
+  img.onload=()=>{let w=img.width,h=img.height;if(w>maxW){h=Math.round(h*maxW/w);w=maxW}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);URL.revokeObjectURL(url);res(c.toDataURL('image/webp',quality))};
+  img.onerror=()=>{URL.revokeObjectURL(url);rej(Error('Không đọc được ảnh'))};
+  img.src=url;
+ });
+}
+async function loadServiceMgmt(){
+ if(!svcCatalogLoaded){await loadHardcodedCatalog();svcCatalogLoaded=true}
+ try{
+  const [customPkgs,customAvs,overrides,hiddenRows,fieldRows,typeRows,noteRows]=await Promise.all([
+   api('shop_custom_packages?select=service_name,package_name,price&order=service_name.asc').catch(()=>[]),
+   api('shop_custom_avatars?select=service_name,avatar_data').catch(()=>[]),
+   api('service_prices?select=service_name,package_name,price').catch(()=>[]),
+   api('shop_hidden_services?select=service_name').catch(()=>[]),
+   api('shop_service_fields?select=service_name,need_account,need_password,need_phone,need_support').catch(e=>{if(/shop_service_fields|42P01|PGRST205|does not exist/i.test(String(e.message)))svcFieldsOn=false;return []}),
+   api('shop_service_types?select=service_name,service_type').catch(e=>{if(/shop_service_types|42P01|PGRST205|does not exist/i.test(String(e.message)))svcTypesOn=false;return []}),
+   api('shop_service_notes?select=service_name,note').catch(e=>{if(/shop_service_notes|42P01|PGRST205|does not exist/i.test(String(e.message)))svcNotesOn=false;return []})
+  ]);
+  svcNotes={};(noteRows||[]).forEach(x=>{if(x.note)svcNotes[x.service_name]=x.note});
+  svcTypes={};(typeRows||[]).forEach(x=>{svcTypes[x.service_name]=x.service_type});
+  svcFields={};(fieldRows||[]).forEach(x=>{svcFields[x.service_name]={account:!!x.need_account,password:!!x.need_password,phone:!!x.need_phone,support:!!x.need_support}});
+  svcHidden=new Set((hiddenRows||[]).map(x=>x.service_name));
+  const ovMap=new Map((overrides||[]).map(o=>[o.service_name+'|||'+o.package_name,Number(o.price)]));
+  const avMap=new Map((customAvs||[]).map(a=>[a.service_name,a.avatar_data]));
+  const rows=[];
+  const allNames=new Set([...Object.keys(svcCatalog||{}),...(customPkgs||[]).map(p=>p.service_name)]);
+  [...allNames].sort((a,b)=>a.localeCompare(b,'vi')).forEach(svc=>{
+   (svcCatalog[svc]||[]).forEach(([pkg,price])=>{
+    const key=svc+'|||'+pkg;
+    rows.push({service:svc,package:pkg,price:ovMap.has(key)?ovMap.get(key):Number(price),origin:'hardcoded'});
+   });
+   (customPkgs||[]).filter(p=>p.service_name===svc).forEach(p=>{
+    rows.push({service:svc,package:p.package_name,price:Number(p.price),origin:'custom'});
+   });
+  });
+  svcRowsCache=rows;
+  renderServiceMgmt([...allNames].sort((a,b)=>a.localeCompare(b,'vi')),avMap);
+ }catch(e){document.getElementById('services').innerHTML='<div class="notice">Không tải được: '+esc(e.message)+'</div>'}
+}
+function renderServiceMgmt(names,avMap){
+ const el=document.getElementById('services');if(!el)return;
+ const options=names.map(n=>'<option value="'+esc(n)+'">').join('');
+ const avatarGrid=names.map(svc=>{
+  const src=avMap.get(svc)||svcAvatars[svc]||'';
+  const hasHard=!!(svcCatalog[svc]&&svcCatalog[svc].length);
+  const isHidden=svcHidden.has(svc);
+  const delBtn=hasHard
+   ?(isHidden
+     ?'<button class="up-btn" style="margin-top:6px;color:var(--emerald);border-color:rgba(52,211,153,.4)" onclick="unhideService('+jsStr(svc)+')">👁️ Hiện lại</button>'
+     :'<button class="up-btn" style="margin-top:6px;color:var(--rose);border-color:rgba(251,113,133,.4)" onclick="hideService('+jsStr(svc)+')">🚫 Ẩn dịch vụ</button>')
+   :'<button class="up-btn" style="margin-top:6px;color:var(--rose);border-color:rgba(251,113,133,.4)" onclick="deleteService('+jsStr(svc)+')">🗑️ Xoá dịch vụ</button>';
+  return '<div class="avatar-item">'+(src?'<img src="'+src+'">':'<div style="height:80px;border-radius:10px;background:#1a1c22;margin-bottom:8px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px">Chưa có ảnh</div>')+'<div class="name">'+esc(svc)+(isHidden?' <span class="badge b-cancelled">Đang ẩn</span>':'')+'</div>'+needSummary(svc)+'<label class="up-btn">📤 Đổi ảnh<input type="file" accept="image/*" onchange="uploadAvatar(this,'+jsStr(svc)+')"></label><button class="up-btn" style="margin-top:6px;color:var(--cyan);border-color:rgba(34,211,238,.4)" onclick="openFieldsModal('+jsStr(svc)+')">⚙️ Thông tin cần nhập</button>'+delBtn+'</div>';
+ }).join('');
+ el.innerHTML='<h2>🧰 Dịch vụ &amp; Giá</h2>'+
+  '<div class="svc-card"><h3>➕ Thêm dịch vụ / gói mới</h3><div class="svc-form">'+
+   '<div><label>Tên dịch vụ (chọn có sẵn hoặc gõ tên mới)</label><input id="svcNewService" class="search-input" list="svcServiceList" placeholder="Ví dụ: Acc Blox Fruits (Quốc Tế)" oninput="syncNewServiceNeed()"><datalist id="svcServiceList">'+options+'</datalist></div>'+
+   '<div><label>Tên gói</label><input id="svcNewPackage" class="search-input" placeholder="Ví dụ: Level Max"></div>'+
+   '<div><label>Giá (đ)</label><input id="svcNewPrice" class="search-input" type="number" min="1" step="1000" placeholder="30000"></div>'+
+   '<div><button class="btn green" style="width:100%;padding:13px" onclick="addNewPackage()">➕ Thêm</button></div>'+
+   '<div class="full-row"><label>Loại dịch vụ (đơn sẽ hiện ở trang Tài khoản đã mua / Đơn cày thuê / Đơn vật phẩm của khách)</label>'+typeSelect('svcNewType',typeFor(''))+'</div>'+
+   '<div class="full-row"><label>Lưu ý hiển thị đầu trang dịch vụ (không bắt buộc)</label>'+noteBox('svcNewNote','')+'</div>'+
+   '<div class="full-row"><label>Khách cần nhập khi đặt đơn (áp dụng cho cả dịch vụ)</label>'+needBoxes('svcNeed_',fieldsFor(''))+'</div>'+
+   '<div class="full-row"><label>Ảnh đại diện (chỉ cần khi tạo dịch vụ hoàn toàn mới)</label><input id="svcNewAvatar" type="file" accept="image/*"></div>'+
+  '</div><div class="svc-hint">Nếu tên dịch vụ đã có sẵn, hệ thống sẽ thêm gói mới vào đúng dịch vụ đó. Nếu là tên hoàn toàn mới, một dịch vụ mới sẽ xuất hiện trên web shop kèm ảnh bạn chọn (nếu có).</div></div>'+
+  '<div class="svc-card"><h3>🖼️ Ảnh đại diện dịch vụ</h3><div class="avatar-grid">'+avatarGrid+'</div></div>'+
+  '<div class="svc-card"><h3>💰 Toàn bộ giá dịch vụ</h3><div class="table-wrap"><table class="table"><tr><th>Dịch vụ</th><th>Gói</th><th>Giá</th><th>Nguồn</th><th>Thao tác</th></tr>'+
+   svcRowsCache.map((r,i)=>`<tr><td>${esc(r.service)}</td><td>${esc(r.package)}</td><td><b class="money">${money(r.price)}</b></td><td><span class="badge b-${r.origin}">${r.origin==='custom'?'Tuỳ chỉnh':'Có sẵn'}</span></td><td><button class="btn blue" onclick="editServicePrice(${i})">✏️ Sửa giá</button>${r.origin==='custom'?`<button class="btn red" onclick="deleteCustomPackage(${i})">🗑️ Xoá</button>`:''}</td></tr>`).join('')+
+  '</table></div></div>';
+}
+async function addNewPackage(){
+ if(svcBusy)return;
+ const service=document.getElementById('svcNewService').value.trim();
+ const pkg=document.getElementById('svcNewPackage').value.trim();
+ const price=Number(document.getElementById('svcNewPrice').value);
+ const fileInput=document.getElementById('svcNewAvatar');
+ if(!service||!pkg)return alert('Nhập đầy đủ tên dịch vụ và tên gói');
+ if(!Number.isFinite(price)||price<=0)return alert('Giá không hợp lệ');
+ svcBusy=true;
+ try{
+  const isNewPkg=!(svcCatalog[service]||[]).some(x=>x[0]===pkg)&&!svcRowsCache.some(r=>r.service===service&&r.package===pkg&&r.origin==='custom');
+  const need=readNeed('svcNeed_');
+  const typeVal=document.getElementById('svcNewType').value;
+  await rpc('admin_set_service_price',{p_service:service,p_package:pkg,p_price:price,p_new:isNewPkg});
+  if(svcFieldsOn)await saveServiceFields(service,need);
+  await saveServiceType(service,typeVal);
+  const noteVal=document.getElementById('svcNewNote').value.trim();
+  if(noteVal)await saveServiceNote(service,noteVal);
+  if(fileInput.files&&fileInput.files[0]){
+   const data=await resizeImageFile(fileInput.files[0]);
+   await rpc('admin_set_avatar',{p_service:service,p_avatar:data});
+  }
+  document.getElementById('svcNewService').value='';
+  document.getElementById('svcNewPackage').value='';
+  document.getElementById('svcNewPrice').value='';
+  fileInput.value='';
+  await loadServiceMgmt();
+  alert(svcFieldsOn?'✅ Đã lưu.':'✅ Đã lưu gói. Phần thông tin cần nhập chưa lưu được vì chưa chạy file SQL shop_service_fields.');
+ }catch(e){alert('Không lưu được: '+e.message)}finally{svcBusy=false}
+}
+async function uploadAvatar(input,service){
+ if(svcBusy||!input.files||!input.files[0])return;
+ svcBusy=true;
+ try{
+  const data=await resizeImageFile(input.files[0]);
+  await rpc('admin_set_avatar',{p_service:service,p_avatar:data});
+  await loadServiceMgmt();
+ }catch(e){alert('Không đổi được ảnh: '+e.message)}finally{svcBusy=false;input.value=''}
+}
+async function editServicePrice(i){
+ const r=svcRowsCache[i];if(!r||svcBusy)return;
+ const raw=prompt('Nhập giá mới cho "'+r.package+'" ('+r.service+'):',r.price);
+ if(raw===null)return;
+ const price=Number(raw);
+ if(!Number.isFinite(price)||price<=0)return alert('Giá không hợp lệ');
+ svcBusy=true;
+ try{
+  await rpc('admin_set_service_price',{p_service:r.service,p_package:r.package,p_price:price,p_new:r.origin==='custom'});
+  await loadServiceMgmt();
+ }catch(e){alert('Không lưu được: '+e.message)}finally{svcBusy=false}
+}
+async function deleteCustomPackage(i){
+ const r=svcRowsCache[i];if(!r||r.origin!=='custom'||svcBusy)return;
+ if(!confirm('Xoá gói "'+r.package+'" của dịch vụ "'+r.service+'"? Gói này sẽ không còn hiển thị trên web shop.'))return;
+ svcBusy=true;
+ try{
+  await rpc('admin_delete_custom_package',{p_service:r.service,p_package:r.package});
+  await loadServiceMgmt();
+ }catch(e){alert('Không xoá được: '+e.message)}finally{svcBusy=false}
+}
+
+async function hideService(svc){
+ if(svcBusy)return;
+ if(!confirm('Ẩn dịch vụ "'+svc+'" khỏi web shop? Dịch vụ này có sẵn trong code nên không xoá vĩnh viễn được, chỉ ẩn đi. Bấm "Hiện lại" bất cứ lúc nào để hiện lại.'))return;
+ svcBusy=true;
+ try{await rpc('admin_hide_service',{p_service:svc});await loadServiceMgmt()}
+ catch(e){alert('Không ẩn được: '+e.message)}finally{svcBusy=false}
+}
+async function unhideService(svc){
+ if(svcBusy)return;
+ svcBusy=true;
+ try{await rpc('admin_unhide_service',{p_service:svc});await loadServiceMgmt()}
+ catch(e){alert('Không hiện lại được: '+e.message)}finally{svcBusy=false}
+}
+async function deleteService(svc){
+ if(svcBusy)return;
+ if(!confirm('Xoá vĩnh viễn dịch vụ "'+svc+'" cùng toàn bộ gói và ảnh của nó? Không thể khôi phục.'))return;
+ svcBusy=true;
+ try{await rpc('admin_delete_custom_service',{p_service:svc});await loadServiceMgmt()}
+ catch(e){alert('Không xoá được: '+e.message)}finally{svcBusy=false}
+}
+init();
+</script>
+</body>
+</html>
