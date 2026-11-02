@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Chat v?i Admin — Shop C?a B?n</title>
+
+<style>
+:root{
+  --bg:#05060a;
+  --panel:#0d0f17;
+  --panel2:#121522;
+  --line:#252a3b;
+  --muted:#929ab0;
+  --text:#eef0f7;
+  --gold:#f5c96b;
+  --violet:#a78bfa;
+  --cyan:#22d3ee;
+  --green:#34d399;
+  --rose:#fb7185
+}
+
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:Segoe UI,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text)
+}
+
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(ellipse at 15% 0%,rgba(124,58,237,.2),transparent 42%),
+    radial-gradient(ellipse at 90% 20%,rgba(34,211,238,.13),transparent 40%),
+    var(--bg);
+  padding:22px
+}
+
+.wrap{width:min(100%,1000px);margin:0 auto}
+
+.top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:18px
+}
+
+.brand{
+  font-weight:900;
+  font-size:20px;
+  color:var(--gold);
+  letter-spacing:.2px
+}
+
+.back{
+  color:var(--cyan);
+  text-decoration:none;
+  font-weight:800;
+  font-size:14px
+}
+
+.back:hover{text-decoration:underline}
+
+.card{
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:rgba(13,15,23,.94);
+  box-shadow:0 22px 70px #0008;
+  overflow:hidden
+}
+
+.head{
+  padding:18px 20px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px
+}
+
+.head strong{font-size:16px}
+
+.status{
+  font-size:12px;
+  color:var(--green);
+  font-weight:800
+}
+
+.identity{
+  padding:10px 20px;
+  color:var(--muted);
+  font-size:12px;
+  border-bottom:1px solid #202536
+}
+
+.messages{
+  height:min(62vh,600px);
+  min-height:320px;
+  overflow:auto;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  background:linear-gradient(
+    180deg,
+    rgba(5,6,10,.2),
+    rgba(5,6,10,.45)
+  )
+}
+
+.empty{
+  margin:auto;
+  text-align:center;
+  color:var(--muted);
+  line-height:1.7;
+  max-width:360px
+}
+
+.bubble{
+  max-width:min(78%,620px);
+  padding:11px 14px;
+  border-radius:15px;
+  line-height:1.55;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  font-size:14px
+}
+
+.bubble.customer{
+  align-self:flex-end;
+  background:linear-gradient(135deg,#59429a,#433477);
+  border:1px solid #8b70d0;
+  border-bottom-right-radius:5px
+}
+
+.bubble.admin{
+  align-self:flex-start;
+  background:#171d2b;
+  border:1px solid #354056;
+  border-bottom-left-radius:5px
+}
+
+.meta{
+  display:block;
+  margin-top:5px;
+  font-size:10px;
+  color:#c5c9d7;
+  opacity:.78
+}
+
+.compose{
+  padding:14px;
+  display:flex;
+  gap:10px;
+  border-top:1px solid var(--line);
+  background:#0b0d14
+}
+
+.compose textarea{
+  flex:1;
+  resize:none;
+  min-height:46px;
+  max-height:130px;
+  padding:12px 14px;
+  border:1px solid #343b51;
+  border-radius:12px;
+  background:#080a10;
+  color:var(--text);
+  font:inherit;
+  outline:none
+}
+
+.compose textarea:focus{
+  border-color:var(--violet);
+  box-shadow:0 0 0 3px #a78bfa22
+}
+
+.send{
+  border:0;
+  border-radius:12px;
+  padding:0 22px;
+  background:linear-gradient(135deg,var(--gold),#f59e0b);
+  color:#211707;
+  font-weight:900;
+  cursor:pointer
+}
+
+.send:disabled{opacity:.5;cursor:not-allowed}
+
+.hint{
+  text-align:center;
+  color:var(--muted);
+  font-size:11px;
+  padding:0 12px 13px;
+  background:#0b0d14
+}
+
+.notice{
+  margin:14px 0 0;
+  padding:12px 14px;
+  border:1px solid #4b3d22;
+  background:#211a0d;
+  color:#e9d7a6;
+  border-radius:12px;
+  font-size:12px;
+  line-height:1.6
+}
+
+.gate{padding:36px 24px;text-align:center}
+.gate h2{margin:0 0 10px;color:var(--gold)}
+.gate p{color:var(--muted);line-height:1.6}
+
+.gate a{
+  display:inline-block;
+  margin-top:10px;
+  padding:11px 18px;
+  border-radius:10px;
+  border:0;
+  background:var(--gold);
+  color:#201706;
+  font-weight:900;
+  text-decoration:none;
+  cursor:pointer
+}
+
+.error{
+  color:#fda4af;
+  font-size:13px;
+  padding:8px 20px;
+  display:none
+}
+
+@media(max-width:600px){
+  body{padding:12px}
+  .brand{font-size:17px}
+  .head{padding:15px}
+  .messages{height:66vh;min-height:280px;padding:14px}
+  .bubble{max-width:88%}
+  .compose{padding:10px}
+  .send{padding:0 15px}
+  .top{align-items:flex-start}
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">?? CHAT V?I ADMIN</div>
+    <a class="back" href="index.html">? Quay l?i shop</a>
+  </header>
+
+  <main class="card" id="app">
+    <div class="gate">
+      <h2>Ðang k?t n?i...</h2>
+      <p>Vui lòng ch? trong giây lát.</p>
+    </div>
+  </main>
+
+  <div class="notice">
+    ?? Tin nh?n trong cu?c trò chuy?n này ch? tài kho?n c?a b?n và admin du?c phép d?c.
+    Không chia s? m?t kh?u ho?c thông tin nh?y c?m qua chat.
+  </div>
+
+</div>
+
+<script>
+'use strict';
+
+/* =========================================
+   C?U HÌNH SUPABASE
+========================================= */
+
+const SUPABASE_URL =
+  'https://zccxwrmrkbqcpbwzbbbz.supabase.co';
+
+const SUPABASE_KEY =
+  'sb_publishable_Qkv8BegNMvtXSLRRi7PQHA_yteS0bJM';
+
+const AUTH_URL =
+  SUPABASE_URL + '/functions/v1/username-auth';
+
+
+/* =========================================
+   THÔNG TIN ÐANG NH?P
+========================================= */
+
+let accessToken =
+  localStorage.getItem('shopzicl_username_token') || '';
+
+let currentUser = null;
+let loading = false;
+let lastSignature = '';
+let poller = null;
+
+const app = document.getElementById('app');
+
+
+/* =========================================
+   HÀM X? LÝ D? LI?U
+========================================= */
+
+const esc = v =>
+  String(v ?? '').replace(/[&<>"']/g, c => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[c]));
+
+
+/* =========================================
+   K?T N?I SUPABASE REST API
+========================================= */
+
+async function api(path, opt = {}) {
+
+  const response = await fetch(
+    SUPABASE_URL + '/rest/v1/' + path,
+    {
+      ...opt,
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: 'Bearer ' + accessToken,
+        'Content-Type': 'application/json',
+        ...(opt.headers || {})
+      }
+    }
+  );
+
+  const resultText = await response.text();
+
+  if (!response.ok) {
+    throw Error(resultText || response.statusText);
+  }
+
+  return resultText ? JSON.parse(resultText) : null;
+}
+
+
+/* =========================================
+   G?I RPC
+========================================= */
+
+async function rpc(name, body) {
+
+  return api('rpc/' + name, {
+    method: 'POST',
+    body: JSON.stringify(body)
+  });
+
+}
+
+
+/* =========================================
+   KI?M TRA TÀI KHO?N
+========================================= */
+
+async function getProfile() {
+
+  if (!accessToken) return null;
+
+  const response = await fetch(AUTH_URL, {
+    method: 'POST',
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: 'Bearer ' + accessToken,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      action: 'me'
+    })
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok || !data.user) {
+    throw Error(data.error || 'Phiên dang nh?p dã h?t h?n.');
+  }
+
+  return data.user;
+}
+
+
+/* =========================================
+   HI?N TH? THÔNG BÁO
+========================================= */
+
+function showGate(title, desc, buttonText, href) {
+
+  app.innerHTML =
+    '<div class="gate">' +
+      '<h2>' + esc(title) + '</h2>' +
+      '<p>' + esc(desc) + '</p>' +
+      '<a href="' + esc(href) + '">' +
+        esc(buttonText) +
+      '</a>' +
+    '</div>';
+
+}
+
+
+/* =========================================
+   GIAO DI?N CHAT
+========================================= */
+
+function renderShell() {
+
+  app.innerHTML = `
+    <div class="head">
+      <strong>??? H? tr? khách hàng</strong>
+      <span class="status">? Ðang k?t n?i</span>
+    </div>
+
+    <div class="identity">
+      Ðang chat v?i admin · Tài kho?n:
+      <b>${esc(currentUser.username || 'Khách')}</b>
+    </div>
+
+    <div id="chatError" class="error"></div>
+
+    <div id="messages" class="messages">
+      <div class="empty">
+        Chua có tin nh?n.<br>
+        Hãy g?i l?i nh?n n?u b?n c?n h? tr? nhé!
+      </div>
+    </div>
+
+    <div class="compose">
+      <textarea
+        id="messageInput"
+        maxlength="2000"
+        rows="1"
+        placeholder="Nh?p tin nh?n... (t?i da 2.000 ký t?)"
+      ></textarea>
+
+      <button class="send" id="sendBtn" type="button">
+        G?I
+      </button>
+    </div>
+
+    <div class="hint">
+      Nh?n Enter d? g?i · Shift + Enter d? xu?ng dòng
+    </div>
+  `;
+
+  const input = document.getElementById('messageInput');
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  input.addEventListener('input', () => {
+    input.style.height = 'auto';
+    input.style.height =
+      Math.min(input.scrollHeight, 130) + 'px';
+  });
+
+  document
+    .getElementById('sendBtn')
+    .addEventListener('click', sendMessage);
+
+}
+
+
+/* =========================================
+   ÐÁNH D?U TIN NH?N ÐÃ Ð?C
+========================================= */
+
+async function markSeen() {
+
+  try {
+
+    await rpc('chat_mark_seen', {
+      p_user_id: currentUser.id,
+      p_read: true
+    });
+
+  } catch (error) {
+
+    console.warn(
+      'Không c?p nh?t du?c tr?ng thái dã d?c:',
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   T?I TIN NH?N T? SUPABASE
+========================================= */
+
+async function loadMessages(force = false) {
+
+  if (!currentUser) return;
+
+  try {
+
+    const rows = await api(
+      'shop_chat_messages' +
+      '?select=id,user_id,sender_role,message,created_at,delivered_at,read_at' +
+      '&user_id=eq.' + encodeURIComponent(currentUser.id) +
+      '&order=created_at.asc' +
+      '&limit=500'
+    );
+
+    const signature = JSON.stringify(rows);
+
+    if (signature === lastSignature && !force) {
+      return;
+    }
+
+    const box = document.getElementById('messages');
+
+    if (!box) return;
+
+    const nearBottom =
+      force ||
+      box.scrollHeight - box.scrollTop - box.clientHeight < 100;
+
+    lastSignature = signature;
+
+    box.innerHTML = rows.length
+      ? rows.map(m => `
+          <div class="bubble ${
+            m.sender_role === 'admin' ? 'admin' : 'customer'
+          }">
+            ${esc(m.message)}
+
+            <small class="meta">
+              ${new Date(m.created_at).toLocaleString('vi-VN')}
+              ${m.sender_role === 'customer'
+                ? ' · Ðã g?i'
+                : ' · Admin'}
+            </small>
+          </div>
+        `).join('')
+      : `
+          <div class="empty">
+            Chua có tin nh?n.<br>
+            Hãy g?i l?i nh?n n?u b?n c?n h? tr? nhé!
+          </div>
+        `;
+
+    if (nearBottom) {
+      box.scrollTop = box.scrollHeight;
+    }
+
+    if (
+      document.visibilityState === 'visible' &&
+      rows.some(m => m.sender_role === 'admin')
+    ) {
+      await markSeen();
+    }
+
+    const status = document.querySelector('.status');
+
+    if (status) {
+      status.textContent = '? Ðang k?t n?i';
+    }
+
+  } catch (error) {
+
+    showError('Không t?i du?c tin nh?n: ' + error.message);
+
+  }
+
+}
+
+
+/* =========================================
+   HI?N TH? L?I
+========================================= */
+
+function showError(message) {
+
+  const el = document.getElementById('chatError');
+
+  if (el) {
+    el.textContent = message;
+    el.style.display = 'block';
+  }
+
+}
+
+
+/* =========================================
+   G?I TIN NH?N LÊN SUPABASE
+========================================= */
+
+async function sendMessage() {
+
+  if (loading) return;
+
+  const input =
+    document.getElementById('messageInput');
+
+  const btn =
+    document.getElementById('sendBtn');
+
+  const message = input.value.trim();
+
+  if (!message) return;
+
+  if (message.length > 2000) {
+    return showError('Tin nh?n t?i da 2.000 ký t?.');
+  }
+
+  loading = true;
+  btn.disabled = true;
+  btn.textContent = '...';
+
+  try {
+
+    await api('shop_chat_messages', {
+      method: 'POST',
+
+      headers: {
+        Prefer: 'return=minimal'
+      },
+
+      body: JSON.stringify({
+        user_id: currentUser.id,
+        sender_role: 'customer',
+        message: message
+      })
+
+    });
+
+    input.value = '';
+    input.style.height = 'auto';
+
+    lastSignature = '';
+
+    await loadMessages(true);
+
+    input.focus();
+
+  } catch (error) {
+
+    showError(
+      'G?i tin nh?n th?t b?i: ' + error.message
+    );
+
+  } finally {
+
+    loading = false;
+    btn.disabled = false;
+    btn.textContent = 'G?I';
+
+  }
+
+}
+
+
+/* =========================================
+   KH?I Ð?NG CHAT
+========================================= */
+
+async function init() {
+
+  try {
+
+    if (!accessToken) {
+
+      showGate(
+        'B?n chua dang nh?p',
+        'Hãy dang nh?p tài kho?n shop tru?c khi chat v?i admin.',
+        'Ð?n trang dang nh?p',
+        'index.html#login'
+      );
+
+      return;
+    }
+
+    currentUser = await getProfile();
+
+    if (currentUser.role === 'admin') {
+
+      showGate(
+        'Ðây là trang chat dành cho khách',
+        'Admin vui lòng s? d?ng m?c “Chat khách” trong trang qu?n tr?.',
+        'M? trang Admin',
+        'admin.html'
+      );
+
+      return;
+    }
+
+    renderShell();
+
+    await loadMessages(true);
+
+    // T? d?ng t?i tin nh?n m?i m?i 3 giây
+    poller = setInterval(() => {
+
+      if (document.visibilityState === 'visible') {
+        loadMessages();
+      }
+
+    }, 3000);
+
+    document.addEventListener(
+      'visibilitychange',
+      () => {
+        if (!document.hidden) {
+          loadMessages(true);
+        }
+      }
+    );
+
+  } catch (error) {
+
+    accessToken = '';
+
+    localStorage.removeItem('shopzicl_username_token');
+
+    showGate(
+      'Phiên dang nh?p không h?p l?',
+      error.message || 'Vui lòng dang nh?p l?i.',
+      'Quay l?i shop',
+      'index.html'
+    );
+
+  }
+
+}
+
+init();
+
+</script>
+</body>
+</html>
