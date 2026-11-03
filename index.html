@@ -1108,23 +1108,6 @@ body.dark-mode .theme-toggle-pill::after{transform:translateX(16px)}
 .rv-field input:focus,.rv-field textarea:focus{border-color:#06b6d4}
 .rv-field textarea{min-height:90px}
 
-/* Upload ảnh */
-.rv-img-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
-.rv-img-slot{
-  width:88px;height:88px;border-radius:10px;
-  border:1.5px dashed var(--line2);
-  background:var(--panel2);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;position:relative;overflow:hidden;
-  transition:border-color .15s;font-size:26px;color:var(--muted);
-}
-.rv-img-slot:hover{border-color:#06b6d4}
-.rv-img-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.rv-img-slot .rv-rm{
-  position:absolute;top:3px;right:3px;background:rgba(0,0,0,.7);border:0;
-  border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer;
-  color:#fff;display:flex;align-items:center;justify-content:center;line-height:1;
-}
 .rv-submit{
   width:100%;height:46px;border:0;border-radius:12px;margin-top:6px;cursor:pointer;
   background:linear-gradient(100deg,#b45309,#f59e0b,#06b6d4);
@@ -1420,15 +1403,6 @@ body.dark-mode .theme-toggle-pill::after{transform:translateX(16px)}
       <label>Đánh giá</label>
       <textarea id="rvContent" placeholder="Chia sẻ trải nghiệm của bạn..." maxlength="800"></textarea>
     </div>
-    <div class="rv-field">
-      <label>Ảnh đính kèm (tối đa 3 ảnh)</label>
-      <div class="rv-img-row" id="rvImgRow">
-        <div class="rv-img-slot" onclick="rvPickImg(0)" id="rvSlot0">＋</div>
-        <div class="rv-img-slot" onclick="rvPickImg(1)" id="rvSlot1">＋</div>
-        <div class="rv-img-slot" onclick="rvPickImg(2)" id="rvSlot2">＋</div>
-      </div>
-      <input type="file" id="rvFileIn" accept="image/*" style="display:none" onchange="rvHandleFile(event)">
-    </div>
     <button class="rv-submit" id="rvSubmitBtn" onclick="submitReview()">Gửi đánh giá</button>
     <div class="rv-msg" id="rvMsg"></div>
   </div>
@@ -1442,7 +1416,6 @@ body.dark-mode .theme-toggle-pill::after{transform:translateX(16px)}
     <div class="rv-detail-name" id="dtName"></div>
     <div class="rv-detail-svc" id="dtSvc"></div>
     <div class="rv-detail-content" id="dtContent"></div>
-    <div class="rv-detail-imgs" id="dtImgs"></div>
     <div class="rv-detail-date" id="dtDate"></div>
   </div>
 </div>
@@ -1927,14 +1900,11 @@ if(window.zcPendingReady)zcProfileReady();
    ĐÁNH GIÁ SHOP – JS
    Bảng Supabase: shop_reviews
    Cột: id(uuid), created_at(timestamptz), reviewer_name(text),
-        stars(int2), service_name(text), content(text),
-        img1(text), img2(text), img3(text)
+        stars(int2), service_name(text), content(text)
 ═══════════════════════════════════════════════════════ */
 
 const RV_TABLE = 'shop_reviews';
 let rvStarVal = 5;
-let rvImgSlot = 0;        // slot đang chờ file
-const rvImgData = [null, null, null]; // base64 cho 3 ảnh
 
 /* ── helpers ── */
 function starsHtml(n){return '★'.repeat(n)+'☆'.repeat(5-n)}
@@ -1960,30 +1930,6 @@ function rvSetStar(n){
   });
 }
 
-/* ── Ảnh ── */
-function rvPickImg(slot){
-  rvImgSlot = slot;
-  document.getElementById('rvFileIn').value='';
-  document.getElementById('rvFileIn').click();
-}
-function rvHandleFile(e){
-  const file = e.target.files[0];
-  if(!file) return;
-  if(file.size > 3*1024*1024){alert('Ảnh tối đa 3MB nhé!');return}
-  const reader = new FileReader();
-  reader.onload = ev => {
-    rvImgData[rvImgSlot] = ev.target.result; // base64 data URL
-    const slot = document.getElementById('rvSlot'+rvImgSlot);
-    slot.innerHTML = '<img src="'+ev.target.result+'" alt=""><button class="rv-rm" onclick="rvRemoveImg('+rvImgSlot+',event)">✕</button>';
-  };
-  reader.readAsDataURL(file);
-}
-function rvRemoveImg(slot, e){
-  e.stopPropagation();
-  rvImgData[slot] = null;
-  document.getElementById('rvSlot'+slot).innerHTML = '＋';
-}
-
 /* ── Submit đánh giá ── */
 async function submitReview(){
   const name    = document.getElementById('rvName').value.trim();
@@ -2003,15 +1949,12 @@ async function submitReview(){
       stars:         rvStarVal,
       service_name:  svc,
       content:       content,
-      img1: rvImgData[0] || null,
-      img2: rvImgData[1] || null,
-      img3: rvImgData[2] || null,
     };
     const r = await fetch(SUPABASE_URL+'/rest/v1/'+RV_TABLE, {
       method: 'POST',
       headers: {
         apikey: SUPABASE_KEY,
-        Authorization: 'Bearer '+(typeof accessToken!=='undefined'?accessToken:SUPABASE_KEY),
+        Authorization: 'Bearer '+((typeof accessToken!=='undefined' && accessToken)?accessToken:SUPABASE_KEY),
         'Content-Type': 'application/json',
         Prefer: 'return=representation'
       },
@@ -2023,7 +1966,6 @@ async function submitReview(){
     document.getElementById('rvName').value='';
     document.getElementById('rvService').value='';
     document.getElementById('rvContent').value='';
-    [0,1,2].forEach(i=>{ rvImgData[i]=null; document.getElementById('rvSlot'+i).innerHTML='＋'; });
     rvSetStar(5);
     setTimeout(()=>closeReviewForm(), 1800);
     loadReviews(); // reload carousel
@@ -2079,11 +2021,6 @@ function openReviewDetail(rv){
   document.getElementById('dtName').textContent   = '👤 '+(rv.reviewer_name||'Ẩn danh');
   document.getElementById('dtSvc').innerHTML      = 'Dịch vụ đã đặt: <b>'+rvEsc(rv.service_name)+'</b>';
   document.getElementById('dtContent').textContent = rv.content||'';
-  // Ảnh
-  const imgs = [rv.img1, rv.img2, rv.img3].filter(Boolean);
-  document.getElementById('dtImgs').innerHTML = imgs.map(src=>
-    `<img src="${rvEsc(src)}" alt="Ảnh đánh giá" onclick="window.open('${rvEsc(src)}','_blank')">`
-  ).join('');
   // Ngày
   const d = rv.created_at ? new Date(rv.created_at).toLocaleString('vi-VN') : '';
   document.getElementById('dtDate').textContent = d ? '🕐 '+d : '';
