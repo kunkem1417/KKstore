@@ -4,247 +4,87 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="dark">
-<title>Chat v?i Admin � Shop C?a B?n</title>
+<title>Chat với Admin – KKstore</title>
 
 <style>
 :root{
-  --bg:#05060a;
-  --panel:#0d0f17;
-  --panel2:#121522;
-  --line:#252a3b;
-  --muted:#929ab0;
-  --text:#eef0f7;
-  --gold:#f5c96b;
-  --violet:#a78bfa;
-  --cyan:#22d3ee;
-  --green:#34d399;
-  --rose:#fb7185
+  color-scheme:dark;
+  --bg:#090909;
+  --panel:#151313;
+  --panel2:#1d1717;
+  --line:rgba(255,255,255,.09);
+  --muted:#b7a9a9;
+  --text:#fff7f7;
+  --red:#ef3434;
+  --red2:#b91c1c;
+  --red-soft:rgba(239,52,52,.14);
+  --green:#5ee0a0;
 }
-
 *{box-sizing:border-box}
-
-html,body{
-  margin:0;
-  min-height:100%;
-  font-family:Segoe UI,Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text)
-}
-
+html,body{margin:0;min-height:100%;font-family:Inter,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text)}
 body{
-  min-height:100vh;
+  min-height:100vh;padding:28px 18px 36px;
   background:
-    radial-gradient(ellipse at 15% 0%,rgba(124,58,237,.2),transparent 42%),
-    radial-gradient(ellipse at 90% 20%,rgba(34,211,238,.13),transparent 40%),
-    var(--bg);
-  padding:22px
+    radial-gradient(ellipse at 12% 0%,rgba(185,28,28,.22),transparent 38%),
+    radial-gradient(ellipse at 92% 14%,rgba(239,52,52,.11),transparent 34%),
+    linear-gradient(180deg,#100b0b 0%,#090909 55%,#0d0909 100%);
 }
-
-.wrap{width:min(100%,1000px);margin:0 auto}
-
-.top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:18px
+button,textarea,a{font:inherit}
+.wrap{width:min(100%,1040px);margin:0 auto}
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 auto 18px;padding:0 2px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:900;font-size:19px;letter-spacing:.5px;color:#fff}
+.brand::before{content:"✦";display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:linear-gradient(145deg,#ff5555,#a50f0f);box-shadow:0 8px 24px #e11d1d44;color:#fff;font-size:20px}
+.back{display:inline-flex;align-items:center;gap:7px;padding:10px 15px;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:#ffffff08;color:#f3dede;text-decoration:none;font-weight:700;font-size:13px;transition:.2s}
+.back:hover{border-color:#ef4444;background:var(--red-soft);color:#fff}
+.card{border:1px solid rgba(255,90,90,.19);border-radius:22px;background:linear-gradient(155deg,rgba(29,22,22,.98),rgba(15,13,13,.98));box-shadow:0 24px 75px #0009,0 0 0 1px #ffffff04;overflow:hidden}
+.head{min-height:68px;padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(90deg,rgba(185,28,28,.17),transparent 65%)}
+.head strong{font-size:16px;letter-spacing:.1px}
+.status{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--green);font-weight:800;white-space:nowrap}
+.status::first-letter{color:var(--green)}
+.identity{padding:12px 22px;color:#c9baba;font-size:12px;border-bottom:1px solid var(--line);background:#ffffff03}
+.identity b{color:#fff;font-weight:800}
+.messages{height:min(64vh,640px);min-height:340px;overflow:auto;padding:24px;display:flex;flex-direction:column;gap:13px;background:radial-gradient(ellipse at 50% 0%,rgba(185,28,28,.055),transparent 60%),#0b0909}
+.messages::-webkit-scrollbar{width:8px}
+.messages::-webkit-scrollbar-thumb{background:#6b2828;border-radius:99px}
+.empty{margin:auto;text-align:center;color:#a99a9a;line-height:1.8;max-width:360px}
+.empty::before{content:"💬";display:block;font-size:34px;margin-bottom:9px;filter:saturate(.75)}
+.bubble{max-width:min(78%,650px);padding:12px 15px;border-radius:17px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;box-shadow:0 5px 16px #0003}
+.bubble.customer{align-self:flex-end;background:linear-gradient(135deg,#e43b3b,#a91919);border:1px solid #ff777766;border-bottom-right-radius:5px;color:#fff}
+.bubble.admin{align-self:flex-start;background:linear-gradient(145deg,#282020,#1a1515);border:1px solid #ffffff17;border-bottom-left-radius:5px;color:#fff4f4}
+.meta{display:block;margin-top:6px;font-size:10px;color:#f4dada;opacity:.78}
+.compose{padding:16px;display:flex;gap:10px;border-top:1px solid var(--line);background:#151010}
+.compose textarea{flex:1;resize:none;min-height:48px;max-height:140px;padding:13px 15px;border:1px solid #513131;border-radius:14px;background:#0c0909;color:var(--text);font:inherit;font-size:14px;line-height:1.5;outline:none;transition:.2s}
+.compose textarea::placeholder{color:#8e7d7d}
+.compose textarea:focus{border-color:#ef4444;box-shadow:0 0 0 3px #ef444422}
+.send{min-width:104px;border:0;border-radius:14px;padding:0 22px;background:linear-gradient(135deg,#ff4b4b,#b91c1c);color:white;font-weight:900;letter-spacing:.5px;cursor:pointer;box-shadow:0 8px 22px #b91c1c44;transition:transform .18s,filter .18s}
+.send:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.send:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.hint{text-align:center;color:#9d8d8d;font-size:11px;padding:0 12px 15px;background:#151010}
+.notice{margin:15px 0 0;padding:13px 16px;border:1px solid #7f292944;background:rgba(100,20,20,.18);color:#d8bcbc;border-radius:14px;font-size:12px;line-height:1.65}
+.gate{padding:48px 24px;text-align:center}
+.gate h2{margin:0 0 10px;color:#ff6666;font-size:22px}
+.gate p{color:var(--muted);line-height:1.7}
+.gate a{display:inline-flex;align-items:center;justify-content:center;margin-top:10px;padding:12px 19px;border-radius:12px;border:0;background:linear-gradient(135deg,#ff4b4b,#b91c1c);color:#fff;font-weight:900;text-decoration:none;cursor:pointer;box-shadow:0 8px 24px #b91c1c44}
+.error{color:#fecaca;font-size:13px;padding:10px 20px;display:none;background:#7f1d1d22;border-bottom:1px solid #7f1d1d55}
+@media(max-width:640px){
+ body{padding:15px 11px 24px}
+ .top{align-items:center;margin-bottom:13px}
+ .brand{font-size:15px;gap:8px}
+ .brand::before{width:36px;height:36px;border-radius:12px;font-size:17px}
+ .back{padding:9px 12px;font-size:12px}
+ .card{border-radius:18px}
+ .head{padding:15px 16px;min-height:60px}
+ .head strong{font-size:14px}
+ .identity{padding:11px 16px}
+ .messages{height:66vh;min-height:300px;padding:16px 13px;gap:11px}
+ .bubble{max-width:89%;font-size:13px;padding:11px 13px}
+ .compose{padding:11px;gap:8px}
+ .compose textarea{min-width:0;padding:11px 12px;min-height:46px;font-size:13px}
+ .send{min-width:76px;padding:0 13px;font-size:12px}
+ .hint{font-size:10px}
+ .notice{font-size:11px;padding:11px 13px}
 }
-
-.brand{
-  font-weight:900;
-  font-size:20px;
-  color:var(--gold);
-  letter-spacing:.2px
-}
-
-.back{
-  color:var(--cyan);
-  text-decoration:none;
-  font-weight:800;
-  font-size:14px
-}
-
-.back:hover{text-decoration:underline}
-
-.card{
-  border:1px solid var(--line);
-  border-radius:20px;
-  background:rgba(13,15,23,.94);
-  box-shadow:0 22px 70px #0008;
-  overflow:hidden
-}
-
-.head{
-  padding:18px 20px;
-  border-bottom:1px solid var(--line);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px
-}
-
-.head strong{font-size:16px}
-
-.status{
-  font-size:12px;
-  color:var(--green);
-  font-weight:800
-}
-
-.identity{
-  padding:10px 20px;
-  color:var(--muted);
-  font-size:12px;
-  border-bottom:1px solid #202536
-}
-
-.messages{
-  height:min(62vh,600px);
-  min-height:320px;
-  overflow:auto;
-  padding:20px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  background:linear-gradient(
-    180deg,
-    rgba(5,6,10,.2),
-    rgba(5,6,10,.45)
-  )
-}
-
-.empty{
-  margin:auto;
-  text-align:center;
-  color:var(--muted);
-  line-height:1.7;
-  max-width:360px
-}
-
-.bubble{
-  max-width:min(78%,620px);
-  padding:11px 14px;
-  border-radius:15px;
-  line-height:1.55;
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
-  font-size:14px
-}
-
-.bubble.customer{
-  align-self:flex-end;
-  background:linear-gradient(135deg,#59429a,#433477);
-  border:1px solid #8b70d0;
-  border-bottom-right-radius:5px
-}
-
-.bubble.admin{
-  align-self:flex-start;
-  background:#171d2b;
-  border:1px solid #354056;
-  border-bottom-left-radius:5px
-}
-
-.meta{
-  display:block;
-  margin-top:5px;
-  font-size:10px;
-  color:#c5c9d7;
-  opacity:.78
-}
-
-.compose{
-  padding:14px;
-  display:flex;
-  gap:10px;
-  border-top:1px solid var(--line);
-  background:#0b0d14
-}
-
-.compose textarea{
-  flex:1;
-  resize:none;
-  min-height:46px;
-  max-height:130px;
-  padding:12px 14px;
-  border:1px solid #343b51;
-  border-radius:12px;
-  background:#080a10;
-  color:var(--text);
-  font:inherit;
-  outline:none
-}
-
-.compose textarea:focus{
-  border-color:var(--violet);
-  box-shadow:0 0 0 3px #a78bfa22
-}
-
-.send{
-  border:0;
-  border-radius:12px;
-  padding:0 22px;
-  background:linear-gradient(135deg,var(--gold),#f59e0b);
-  color:#211707;
-  font-weight:900;
-  cursor:pointer
-}
-
-.send:disabled{opacity:.5;cursor:not-allowed}
-
-.hint{
-  text-align:center;
-  color:var(--muted);
-  font-size:11px;
-  padding:0 12px 13px;
-  background:#0b0d14
-}
-
-.notice{
-  margin:14px 0 0;
-  padding:12px 14px;
-  border:1px solid #4b3d22;
-  background:#211a0d;
-  color:#e9d7a6;
-  border-radius:12px;
-  font-size:12px;
-  line-height:1.6
-}
-
-.gate{padding:36px 24px;text-align:center}
-.gate h2{margin:0 0 10px;color:var(--gold)}
-.gate p{color:var(--muted);line-height:1.6}
-
-.gate a{
-  display:inline-block;
-  margin-top:10px;
-  padding:11px 18px;
-  border-radius:10px;
-  border:0;
-  background:var(--gold);
-  color:#201706;
-  font-weight:900;
-  text-decoration:none;
-  cursor:pointer
-}
-
-.error{
-  color:#fda4af;
-  font-size:13px;
-  padding:8px 20px;
-  display:none
-}
-
-@media(max-width:600px){
-  body{padding:12px}
-  .brand{font-size:17px}
-  .head{padding:15px}
-  .messages{height:66vh;min-height:280px;padding:14px}
-  .bubble{max-width:88%}
-  .compose{padding:10px}
-  .send{padding:0 15px}
-  .top{align-items:flex-start}
-}
+@media(max-width:380px){.brand{font-size:13px}.back{font-size:11px;padding:8px 10px}.send{min-width:66px}}
 </style>
 </head>
 
@@ -252,20 +92,20 @@ body{
 <div class="wrap">
 
   <header class="top">
-    <div class="brand">?? CHAT V?I ADMIN</div>
-    <a class="back" href="index.html">? Quay l?i shop</a>
+    <div class="brand">💬 CHAT VỚI ADMIN</div>
+    <a class="back" href="index.html">← Quay lại shop</a>
   </header>
 
   <main class="card" id="app">
     <div class="gate">
-      <h2>�ang k?t n?i...</h2>
-      <p>Vui l�ng ch? trong gi�y l�t.</p>
+      <h2>Đang kết nối...</h2>
+      <p>Vui lòng chờ trong giây lát.</p>
     </div>
   </main>
 
   <div class="notice">
-    ?? Tin nh?n trong cu?c tr� chuy?n n�y ch? t�i kho?n c?a b?n v� admin du?c ph�p d?c.
-    Kh�ng chia s? m?t kh?u ho?c th�ng tin nh?y c?m qua chat.
+    🔒 Tin nhắn trong cuộc trò chuyện này chỉ tài khoản của bạn và admin được phép đọc.
+    Không chia sẻ mật khẩu hoặc thông tin nhạy cảm qua chat.
   </div>
 
 </div>
@@ -274,7 +114,7 @@ body{
 'use strict';
 
 /* =========================================
-   C?U H�NH SUPABASE
+   CẤU HÌNH SUPABASE
 ========================================= */
 
 const SUPABASE_URL =
@@ -288,7 +128,7 @@ const AUTH_URL =
 
 
 /* =========================================
-   TH�NG TIN �ANG NH?P
+   THÔNG TIN ĐĂNG NHẬP
 ========================================= */
 
 let accessToken =
@@ -303,7 +143,7 @@ const app = document.getElementById('app');
 
 
 /* =========================================
-   H�M X? L� D? LI?U
+   HÀM XỬ LÝ DỮ LIỆU
 ========================================= */
 
 const esc = v =>
@@ -346,7 +186,7 @@ async function api(path, opt = {}) {
 
 
 /* =========================================
-   G?I RPC
+   GỬI RPC
 ========================================= */
 
 async function rpc(name, body) {
@@ -360,7 +200,7 @@ async function rpc(name, body) {
 
 
 /* =========================================
-   KI?M TRA T�I KHO?N
+   KIỂM TRA TÀI KHOẢN
 ========================================= */
 
 async function getProfile() {
@@ -382,7 +222,7 @@ async function getProfile() {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok || !data.user) {
-    throw Error(data.error || 'Phi�n dang nh?p d� h?t h?n.');
+    throw Error(data.error || 'Phiên đăng nhập đã hết hạn.');
   }
 
   return data.user;
@@ -390,7 +230,7 @@ async function getProfile() {
 
 
 /* =========================================
-   HI?N TH? TH�NG B�O
+   HIỂN THỊ THÔNG BÁO
 ========================================= */
 
 function showGate(title, desc, buttonText, href) {
@@ -415,21 +255,21 @@ function renderShell() {
 
   app.innerHTML = `
     <div class="head">
-      <strong>??? H? tr? kh�ch h�ng</strong>
-      <span class="status">? �ang k?t n?i</span>
+      <strong>🎧 Hỗ trợ khách hàng</strong>
+      <span class="status">● Đang kết nối</span>
     </div>
 
     <div class="identity">
-      �ang chat v?i admin � T�i kho?n:
-      <b>${esc(currentUser.username || 'Kh�ch')}</b>
+      Đang chat với admin · Tài khoản:
+      <b>${esc(currentUser.username || 'Khách')}</b>
     </div>
 
     <div id="chatError" class="error"></div>
 
     <div id="messages" class="messages">
       <div class="empty">
-        Chua c� tin nh?n.<br>
-        H�y g?i l?i nh?n n?u b?n c?n h? tr? nh�!
+        Chưa có tin nhắn.<br>
+        Hãy gửi lời nhắn nếu bạn cần hỗ trợ nhé!
       </div>
     </div>
 
@@ -438,16 +278,16 @@ function renderShell() {
         id="messageInput"
         maxlength="2000"
         rows="1"
-        placeholder="Nh?p tin nh?n... (t?i da 2.000 k� t?)"
+        placeholder="Nhập tin nhắn... (tối đa 2.000 ký tự)"
       ></textarea>
 
       <button class="send" id="sendBtn" type="button">
-        G?I
+        GỬI
       </button>
     </div>
 
     <div class="hint">
-      Nh?n Enter d? g?i � Shift + Enter d? xu?ng d�ng
+      Nhấn Enter để gửi · Shift + Enter để xuống dòng
     </div>
   `;
 
@@ -474,7 +314,7 @@ function renderShell() {
 
 
 /* =========================================
-   ��NH D?U TIN NH?N �� �?C
+   ĐÁNH DẤU TIN NHẮN ĐÃ ĐỌC
 ========================================= */
 
 async function markSeen() {
@@ -489,7 +329,7 @@ async function markSeen() {
   } catch (error) {
 
     console.warn(
-      'Kh�ng c?p nh?t du?c tr?ng th�i d� d?c:',
+      'Không cập nhật được trạng thái đã đọc:',
       error
     );
 
@@ -542,15 +382,15 @@ async function loadMessages(force = false) {
             <small class="meta">
               ${new Date(m.created_at).toLocaleString('vi-VN')}
               ${m.sender_role === 'customer'
-                ? ' � �� g?i'
-                : ' � Admin'}
+                ? ' · Đã gửi'
+                : ' · Admin'}
             </small>
           </div>
         `).join('')
       : `
           <div class="empty">
-            Chua c� tin nh?n.<br>
-            H�y g?i l?i nh?n n?u b?n c?n h? tr? nh�!
+            Chưa có tin nhắn.<br>
+            Hãy gửi lời nhắn nếu bạn cần hỗ trợ nhé!
           </div>
         `;
 
@@ -568,12 +408,12 @@ async function loadMessages(force = false) {
     const status = document.querySelector('.status');
 
     if (status) {
-      status.textContent = '? �ang k?t n?i';
+      status.textContent = '● Đang kết nối';
     }
 
   } catch (error) {
 
-    showError('Kh�ng t?i du?c tin nh?n: ' + error.message);
+    showError('Không tải được tin nhắn: ' + error.message);
 
   }
 
@@ -597,7 +437,7 @@ function showError(message) {
 
 
 /* =========================================
-   G?I TIN NH?N L�N SUPABASE
+   GỬI TIN NHẮN LÊN SUPABASE
 ========================================= */
 
 async function sendMessage() {
@@ -615,7 +455,7 @@ async function sendMessage() {
   if (!message) return;
 
   if (message.length > 2000) {
-    return showError('Tin nh?n t?i da 2.000 k� t?.');
+    return showError('Tin nhắn tối đa 2.000 ký tự.');
   }
 
   loading = true;
@@ -651,14 +491,14 @@ async function sendMessage() {
   } catch (error) {
 
     showError(
-      'G?i tin nh?n th?t b?i: ' + error.message
+      'Gửi tin nhắn thất bại: ' + error.message
     );
 
   } finally {
 
     loading = false;
     btn.disabled = false;
-    btn.textContent = 'G?I';
+    btn.textContent = 'GỬI';
 
   }
 
@@ -666,7 +506,7 @@ async function sendMessage() {
 
 
 /* =========================================
-   KH?I �?NG CHAT
+   KHỞI ĐỘNG CHAT
 ========================================= */
 
 async function init() {
@@ -676,9 +516,9 @@ async function init() {
     if (!accessToken) {
 
       showGate(
-        'B?n chua dang nh?p',
-        'H�y dang nh?p t�i kho?n shop tru?c khi chat v?i admin.',
-        '�?n trang dang nh?p',
+        'Bạn chưa đăng nhập',
+        'Hãy đăng nhập tài khoản shop trước khi chat với admin.',
+        'Đến trang đăng nhập',
         'index.html#login'
       );
 
@@ -690,9 +530,9 @@ async function init() {
     if (currentUser.role === 'admin') {
 
       showGate(
-        '��y l� trang chat d�nh cho kh�ch',
-        'Admin vui l�ng s? d?ng m?c �Chat kh�ch� trong trang qu?n tr?.',
-        'M? trang Admin',
+        'Đây là trang chat dành cho khách',
+        'Admin vui lòng sử dụng mục “Chat khách” trong trang quản trị.',
+        'Mở trang Admin',
         'admin.html'
       );
 
@@ -703,7 +543,7 @@ async function init() {
 
     await loadMessages(true);
 
-    // T? d?ng t?i tin nh?n m?i m?i 3 gi�y
+    // T? d?ng t?i tin nhắn mới mới 3 giây
     poller = setInterval(() => {
 
       if (document.visibilityState === 'visible') {
@@ -728,9 +568,9 @@ async function init() {
     localStorage.removeItem('shopzicl_username_token');
 
     showGate(
-      'Phi�n dang nh?p kh�ng h?p l?',
-      error.message || 'Vui l�ng dang nh?p l?i.',
-      'Quay l?i shop',
+      'Phiên đăng nhập không hợp lệ',
+      error.message || 'Vui lòng đăng nhập lại.',
+      'Quay lại shop',
       'index.html'
     );
 
